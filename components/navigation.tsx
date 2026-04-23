@@ -5,16 +5,21 @@ import { AnimatePresence, motion } from "framer-motion"
 import { Menu, X } from "lucide-react"
 
 const LINKS = [
-  { href: "#work", label: "Work" },
-  { href: "#about", label: "About" },
+  // Home Education Projects Skills Experience Certificates Contact
+  { href: "#home", label: "Home" },
+  { href: "#education", label: "Education" },
+  { href: "#projects", label: "Projects" },
   { href: "#skills", label: "Skills" },
+  { href: "#experience", label: "Experience" },
+  { href: "#certificates", label: "Certificates" },
+  { href: "#blog", label: "Blog" },
   { href: "#contact", label: "Contact" },
 ]
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
-  const [active, setActive] = useState<string>("#work")
+  const [active, setActive] = useState<string>("#home")
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -217,10 +222,10 @@ export function Navigation() {
                   Say hello
                 </p>
                 <a
-                  href="mailto:hello@dariogeorge.dev"
+                  href="mailto:edu.dariogeorge21@gmail.com"
                   className="mt-2 block font-display text-lg tracking-tight text-foreground"
                 >
-                  hello@dariogeorge.dev
+                  edu.dariogeorge21@gmail.com
                 </a>
               </div>
             </motion.div>
