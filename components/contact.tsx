@@ -1,7 +1,7 @@
 "use client"
 
 import { AnimatePresence, motion } from "framer-motion"
-import { ArrowUpRight, Check, Github, Linkedin, Mail, Twitter } from "lucide-react"
+import { ArrowUpRight, Check, Github, Linkedin, Mail, Twitter, Instagram, Code } from "lucide-react"
 import { useState } from "react"
 import { SectionHeading } from "./section-heading"
 
@@ -10,27 +10,39 @@ const EASE = [0.22, 1, 0.36, 1] as const
 const SOCIALS = [
   {
     label: "Email",
-    handle: "hello@dariogeorge.dev",
-    href: "mailto:hello@dariogeorge.dev",
+    handle: "edu.dariogeorge21@gmail.com",
+    href: "mailto:edu.dariogeorge21@gmail.com",
     icon: Mail,
   },
   {
     label: "GitHub",
-    handle: "@dariogeorge",
-    href: "https://github.com",
+    handle: "@dariogeorge21",
+    href: "https://github.com/dariogeorge21",
     icon: Github,
   },
   {
     label: "LinkedIn",
-    handle: "in/dariogeorge",
-    href: "https://linkedin.com",
+    handle: "in/dariogeorge21",
+    href: "https://linkedin.com/in/dariogeorge21",
     icon: Linkedin,
   },
   {
-    label: "X",
-    handle: "@dariogeorge",
-    href: "https://x.com",
+    label: "X (Twitter)",
+    handle: "@dariogeorge21",
+    href: "https://x.com/dariogeorge21",
     icon: Twitter,
+  },
+  {
+    label: "Instagram",
+    handle: "@dariogeorge21",
+    href: "https://instagram.com/dariogeorge21",
+    icon: Instagram,
+  },
+  {
+    label: "LeetCode",
+    handle: "dariogeorge21",
+    href: "https://leetcode.com/dariogeorge21",
+    icon: Code,
   },
 ]
 
@@ -218,7 +230,7 @@ export function Contact() {
                       Thanks for reaching out, {form.name || "friend"}. I&apos;ll
                       respond from{" "}
                       <span className="text-foreground">
-                        hello@dariogeorge.dev
+                        edu.dariogeorge21@gmail.com
                       </span>{" "}
                       within a day.
                     </p>
