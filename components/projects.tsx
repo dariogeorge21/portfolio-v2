@@ -7,7 +7,7 @@ import { useMemo, useState } from "react"
 import { projects, type Project } from "@/lib/portfolio-data"
 import { SectionHeading } from "./section-heading"
 
-const CATEGORIES = ["All", "Product", "AI", "Web", "Tooling"] as const
+const CATEGORIES = ["All", "Product", "Web", "Tooling", "Other"] as const
 const EASE = [0.22, 1, 0.36, 1] as const
 
 export function Projects() {
@@ -35,8 +35,8 @@ export function Projects() {
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <SectionHeading
           eyebrow="Selected work · 01"
-          title="A portfolio of designed objects."
-          description="Products I&apos;ve shipped, research I&apos;ve published, tools I&apos;ve open-sourced. Each one an argument for restraint and craft."
+          title="A portfolio of my work."
+          description="Products and projects I've built, showcasing my journey, coding skills, and focus on practical engineering."
         />
 
         {/* Filter pills */}
