@@ -34,9 +34,9 @@ export function About() {
           eyebrow="About · 02"
           title={
             <>
-              Engineer by training,
+              Passionate about coding,
               <br />
-              <span className="italic text-muted">designer by obsession.</span>
+              <span className="italic text-muted">focused on continuous learning.</span>
             </>
           }
         />
@@ -247,14 +247,14 @@ export function About() {
  */
 function Biography() {
   const lines = [
-    "I build products that feel inevitable — engineered with care and",
-    "designed with restraint. My work spans real-time analytics, on-device",
-    "AI, and developer tooling, with motion treated as a first-class",
-    "discipline rather than decoration.",
+    "I am an enthusiastic developer who thrives on building",
+    "practical and cool projects. With a builder-oriented mindset,",
+    "I love turning complex problems into elegant software solutions",
+    "and always enjoy learning new tools and paradigms.",
     "",
-    "Currently studying computer science while shipping side projects and",
-    "consulting with select teams. Always interested in talking to people",
-    "who care about craft as much as I do.",
+    "Currently pursuing my Computer Science degree, I am constantly",
+    "evolving my skill set. Whether it's crafting scalable backends",
+    "or engaging user interfaces, I'm always ready for the next challenge.",
   ]
 
   return (
