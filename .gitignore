@@ -6,3 +6,16 @@ node_modules
 logs*.log
 logs/
 
+.env*
+
+.next
+dist
+build
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
