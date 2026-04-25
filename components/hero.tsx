@@ -19,7 +19,7 @@ export function Hero() {
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 60])
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
-  const headline = ["Crafted", "software", "with editorial", "restraint."]
+  const headline = ["Love", "coding |", "lifelong", "learner."]
 
   return (
     <section
@@ -83,9 +83,8 @@ export function Hero() {
               >
                 {i === 2 ? (
                   <>
-                    with{" "}
                     <span className="relative italic text-gradient-neon">
-                      editorial
+                      lifelong
                       <motion.span
                         aria-hidden
                         initial={{ scaleX: 0 }}
@@ -121,9 +120,8 @@ export function Hero() {
           >
             <p className="max-w-md text-[15px] leading-relaxed text-muted md:text-base">
               I&apos;m <span className="text-foreground">Dario George</span> —
-              a developer and computer science student building products that
-              feel like designed objects. Engineering rigor, editorial taste,
-              obsessive attention to motion and detail.
+              a computer science student and developer building practical and cool 
+              projects. Focused on continuous learning and coding.
             </p>
           </motion.div>
 
@@ -136,21 +134,21 @@ export function Hero() {
           >
             <StatItem
               label="Based"
-              value="New York"
+              value="New Delhi"
               sub="Remote-friendly"
             />
             <StatItem
-              label="Availability"
+              label="Status"
               value={
                 <span className="inline-flex items-center gap-2">
                   <span className="relative inline-flex h-2 w-2">
                     <span className="absolute inset-0 rounded-full bg-neon opacity-60 animate-ping" />
                     <span className="relative inline-block h-2 w-2 rounded-full bg-neon" />
                   </span>
-                  Open
+                  Student
                 </span>
               }
-              sub="Select engagements"
+              sub="SJCET Palai"
             />
           </motion.div>
 
@@ -177,7 +175,9 @@ export function Hero() {
               />
             </a>
             <a
-              href="#contact"
+              href="https://www.buymeacoffee.com/dariogeorge21"
+              target="_blank"
+              rel="noreferrer"
               className="group inline-flex h-12 items-center gap-2 text-sm text-muted transition-colors hover:text-foreground"
               data-cursor="hover"
             >
