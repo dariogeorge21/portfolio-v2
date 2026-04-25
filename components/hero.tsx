@@ -121,7 +121,7 @@ export function Hero() {
             <p className="max-w-md text-[15px] leading-relaxed text-muted md:text-base">
               I&apos;m <span className="text-foreground">Dario George</span> —
               a computer science student and developer building practical and cool 
-              projects. Focused on continuous learning and coding.
+              projects. Focused on continuous learning and solving real problems.
             </p>
           </motion.div>
 
