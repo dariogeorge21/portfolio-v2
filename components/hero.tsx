@@ -19,13 +19,13 @@ export function Hero() {
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 60])
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
-  const headline = ["Love", "coding |", "lifelong", "learner."]
+  const headline = ["CS Student", "Developer", "Love Exploring", "Lifelong Learner"]
 
   return (
     <section
       ref={ref}
       id="top"
-      className="relative isolate flex min-h-[100svh] w-full items-end overflow-hidden pb-16 pt-32 md:pb-24 md:pt-40"
+      className="relative isolate flex min-h-svh w-full items-end overflow-hidden pb-16 pt-32 md:pb-24 md:pt-40"
       aria-label="Introduction"
     >
       {/* Layered backgrounds */}
@@ -63,14 +63,14 @@ export function Hero() {
             className="h-px w-12 bg-gradient-to-r from-transparent via-neon/80 to-transparent"
           />
           <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-muted">
-            <span className="text-neon">◆</span>&nbsp;&nbsp;Portfolio · MMXXVI
+            <span className="text-neon">◆</span>&nbsp;&nbsp;Portfolio · 21DG2026
           </span>
         </motion.div>
 
         {/* Headline */}
-        <h1 className="mt-8 font-display text-[14vw] font-light leading-[0.92] tracking-[-0.035em] text-balance md:text-[104px] lg:text-[128px]">
+        <h1 className="mt-8 pb-4 font-display text-[14vw] font-light leading-[0.92] tracking-[-0.035em] text-balance md:text-[104px] lg:text-[128px]">
           {headline.map((word, i) => (
-            <span key={i} className="block overflow-hidden">
+            <span key={i} className="block overflow-hidden pb-2">
               <motion.span
                 initial={{ y: "110%", opacity: 0 }}
                 animate={{ y: "0%", opacity: 1 }}
@@ -83,8 +83,8 @@ export function Hero() {
               >
                 {i === 2 ? (
                   <>
-                    <span className="relative italic text-gradient-neon">
-                      lifelong
+                    <span className="relative italic text-gradient-neon pr-4">
+                      Explorer
                       <motion.span
                         aria-hidden
                         initial={{ scaleX: 0 }}
