@@ -31,22 +31,6 @@ export type Project = {
 const CATEGORIES = ["All", "Product", "Web", "Tooling", "Other"] as const
 const EASE = [0.22, 1, 0.36, 1] as const
 
-// --- PLACEHOLDER DATA (10 Items) ---
-const PLACEHOLDER_PROJECTS: Project[] = Array.from({ length: 10 }).map((_, i) => ({
-  slug: `project-${i + 1}`,
-  title: `Project Title ${i + 1}`,
-  subtitle: "An exploratory design study focused on seamless user experiences and modern tech stacks.",
-  category: ["Product", "Web", "Tooling", "Other"][i % 4],
-  year: "2024",
-  image: `/placeholder-${i + 1}.jpg`,
-  tags: ["Next.js", "Tailwind", "Framer Motion", "TypeScript"].slice(0, (i % 3) + 2),
-  role: "Lead Engineer & Designer",
-  longDescription:
-    "Detailed case study description goes here. This outlines the challenges faced, the architecture chosen, and the final impact of the shipped product on the end users.",
-  liveUrl: "https://example.com",
-  repoUrl: "https://github.com",
-}))
-
 export function Projects() {
   const [filter, setFilter] = useState<(typeof CATEGORIES)[number]>("All")
   const [selected, setSelected] = useState<Project | null>(null)
@@ -65,18 +49,29 @@ export function Projects() {
       className="relative isolate py-28 md:py-40"
       aria-label="Selected work"
     >
-      {/* Subtle background */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-background via-background/80 to-transparent"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.10),transparent_34%),linear-gradient(to_bottom,rgba(255,255,255,0.03),transparent_22%,transparent_78%,rgba(255,255,255,0.02))]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.22] [background-image:radial-gradient(rgba(255,255,255,0)_1px,transparent_1px)] [background-size:18px_18px] [mask-image:radial-gradient(ellipse_at_center,black_35%,transparent_78%)]"
       />
 
-      <div className="mx-auto max-w-9xl px-6 md:px-10">
-        <SectionHeading
-          eyebrow="Selected work · 01"
-          title="A portfolio of my work."
-          description="Products and projects I've built, showcasing my journey, coding skills, and focus on practical engineering."
-        />
+      <div className="relative mx-auto max-w-9xl px-6 md:px-10 items-center">
+        <div className="mx-auto max-w-9xl flex items-center justify-center text-center">
+          <SectionHeading
+          eyebrow="Projects · 04"
+          title={
+            <>
+              A portfolio of projects that blend creativity and code,
+              <br />
+              <span className="italic text-muted">
+                focused on building practical products.
+              </span>
+            </>
+          }/>
+        </div>
 
         
         {/* BENTO LAYOUT GALLERY (10 Items Alternating) */}
