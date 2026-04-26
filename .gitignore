@@ -19,3 +19,7 @@ build
 *.ntvs*
 *.njsproj
 *.sln
+
+
+next-env.d.ts
+next-env.d.ts
