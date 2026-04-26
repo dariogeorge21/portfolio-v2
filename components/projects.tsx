@@ -12,6 +12,7 @@ import {
 import { ArrowUpRight, ArrowRight, Github, Globe, X } from "lucide-react"
 import { useMemo, useState } from "react"
 import { SectionHeading } from "./section-heading"
+import portfolioProjects from "./data/projects-data"
 
 export type Project = {
   slug: string
@@ -52,8 +53,8 @@ export function Projects() {
 
   const filtered = useMemo(() => {
     return filter === "All"
-      ? PLACEHOLDER_PROJECTS
-      : PLACEHOLDER_PROJECTS.filter((p) => p.category === filter)
+      ? portfolioProjects
+      : portfolioProjects.filter((p) => p.category === filter)
   }, [filter])
 
   const displayItems = filtered.slice(0, 10)
@@ -70,60 +71,14 @@ export function Projects() {
         className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-background via-background/80 to-transparent"
       />
 
-      <div className="mx-auto max-w-7xl px-6 md:px-10">
+      <div className="mx-auto max-w-9xl px-6 md:px-10">
         <SectionHeading
           eyebrow="Selected work · 01"
           title="A portfolio of my work."
           description="Products and projects I've built, showcasing my journey, coding skills, and focus on practical engineering."
         />
 
-        {/* Filter pills */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7, ease: EASE }}
-          className="mt-12 flex flex-wrap items-center gap-2"
-          role="tablist"
-          aria-label="Filter projects"
-        >
-          {CATEGORIES.map((cat) => {
-            const isActive = filter === cat
-            return (
-              <button
-                key={cat}
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => setFilter(cat)}
-                className={[
-                  "group relative inline-flex h-9 items-center rounded-full border px-4 text-xs transition-all duration-400",
-                  isActive
-                    ? "border-neon/60 bg-neon/[0.08] text-foreground"
-                    : "border-border bg-surface/40 text-muted hover:border-border-strong hover:text-foreground",
-                ].join(" ")}
-              >
-                <span className="relative">
-                  {cat}
-                  {isActive && (
-                    <motion.span
-                      layoutId="filter-underline"
-                      className="absolute -bottom-[3px] left-0 h-px w-full bg-neon"
-                      style={{ boxShadow: "0 0 10px rgba(0,217,255,0.7)" }}
-                    />
-                  )}
-                </span>
-              </button>
-            )
-          })}
-          <span
-            aria-hidden
-            className="ml-auto hidden font-mono text-[10px] uppercase tracking-[0.3em] text-muted-2 md:inline"
-          >
-            {displayItems.length.toString().padStart(2, "0")} /{" "}
-            {PLACEHOLDER_PROJECTS.length.toString().padStart(2, "0")}
-          </span>
-        </motion.div>
-
+        
         {/* BENTO LAYOUT GALLERY (10 Items Alternating) */}
         <div className="mt-10 md:mt-14 space-y-5 md:space-y-6">
           <AnimatePresence mode="popLayout">
@@ -235,11 +190,10 @@ export function Projects() {
             className="mx-auto mt-20 max-w-3xl text-center md:mt-32"
           >
             <h2 className="mb-4 font-display text-2xl font-medium tracking-tight text-foreground md:text-3xl lg:text-4xl">
-              2023 is finally coming to a close.
+              This is just a glimpse
             </h2>
             <p className="mx-auto max-w-2xl text-base leading-relaxed text-muted/90 md:text-lg">
-              Not the most straightforward year, perhaps, but an important one for our
-              growing business.
+              I've built numerous projects to sharpen my skills, tackle real-world problems, and blend technology with creative problem-solving.
             </p>
           </motion.div>
         )}
