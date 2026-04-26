@@ -154,14 +154,13 @@ export function Skills() {
           <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl">
               <span className="inline-flex items-center rounded-full border border-white/12 bg-white/5 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.22em] text-white/65">
-                Ready to ship
+                Available
               </span>
               <h3 className="mt-4 text-2xl font-semibold leading-tight tracking-tight text-white md:text-3xl">
-                Turn these capabilities into a product your users actually love.
+                Let’s build your product.
               </h3>
               <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/60 md:text-[15px]">
-                From concept to launch, I build practical, polished experiences with
-                clean architecture, confident performance, and thoughtful UX.
+                Fast, clean, and user-focused from idea to launch.
               </p>
             </div>
 
@@ -172,7 +171,7 @@ export function Skills() {
                 href="#projects"
                 className="inline-flex items-center rounded-full border border-cyan-200/35 bg-cyan-200/12 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100 shadow-[0_0_24px_rgba(34,211,238,0.25)] transition-colors duration-300 hover:border-cyan-100/70 hover:bg-cyan-200/22"
               >
-                View Projects
+                Projects
               </motion.a>
               <motion.a
                 whileHover={{ y: -2, scale: 1.01 }}
@@ -180,7 +179,7 @@ export function Skills() {
                 href="#contact"
                 className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/85 transition-colors duration-300 hover:border-white/30 hover:bg-white/10"
               >
-                Start a Conversation
+                Contact
               </motion.a>
             </div>
           </div>
