@@ -16,7 +16,6 @@ import { skillGroups } from "@/lib/portfolio-data"
 import { SectionHeading } from "./section-heading"
 
 const EASE = [0.22, 1, 0.36, 1] as const
-const SWITCH_INTERVAL = 50000
 
 type ViewMode = "chips" | "progress"
 
@@ -36,11 +35,7 @@ export function Skills() {
   const reduceMotion = useReducedMotion()
 
   useEffect(() => {
-    const interval = window.setInterval(() => {
-      setMode((prev) => (prev === "chips" ? "progress" : "chips"))
-    }, SWITCH_INTERVAL)
-
-    return () => window.clearInterval(interval)
+    setMode(Math.random() < 0.5 ? "chips" : "progress")
   }, [])
 
   const groups = skillGroups as SkillGroup[]
@@ -77,13 +72,45 @@ export function Skills() {
         />
         </div>
 
-        {/* Mode chip */}
-        <div className="mt-6 flex items-center gap-3">
-          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.22em] text-white/70 backdrop-blur-md">
+        {/* Mode controls */}
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/4 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.22em] text-white/70 backdrop-blur-md">
             {mode === "chips" ? "Grouped view" : "Measured view"}
           </span>
+
+          <div
+            className="inline-flex items-center rounded-full border border-white/10 bg-black/20 p-1 backdrop-blur-md"
+            role="group"
+            aria-label="Switch skill view"
+          >
+            <button
+              type="button"
+              onClick={() => setMode("chips")}
+              aria-pressed={mode === "chips"}
+              className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors duration-300 ${
+                mode === "chips"
+                  ? "bg-cyan-300/18 text-cyan-100"
+                  : "text-white/45 hover:text-white/75"
+              }`}
+            >
+              View 1
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("progress")}
+              aria-pressed={mode === "progress"}
+              className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors duration-300 ${
+                mode === "progress"
+                  ? "bg-cyan-300/18 text-cyan-100"
+                  : "text-white/45 hover:text-white/75"
+              }`}
+            >
+              View 2
+            </button>
+          </div>
+
           <span className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-            auto-switches every 5 seconds
+            randomly selected on reload
           </span>
         </div>
 
@@ -126,7 +153,7 @@ export function Skills() {
 
           <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl">
-              <span className="inline-flex items-center rounded-full border border-white/12 bg-white/[0.05] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.22em] text-white/65">
+              <span className="inline-flex items-center rounded-full border border-white/12 bg-white/5 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.22em] text-white/65">
                 Ready to ship
               </span>
               <h3 className="mt-4 text-2xl font-semibold leading-tight tracking-tight text-white md:text-3xl">
@@ -151,7 +178,7 @@ export function Skills() {
                 whileHover={{ y: -2, scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
                 href="#contact"
-                className="inline-flex items-center rounded-full border border-white/15 bg-white/[0.05] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/85 transition-colors duration-300 hover:border-white/30 hover:bg-white/[0.10]"
+                className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/85 transition-colors duration-300 hover:border-white/30 hover:bg-white/10"
               >
                 Start a Conversation
               </motion.a>
