@@ -6,14 +6,11 @@ import { Menu, X } from "lucide-react"
 import { PinModal } from "./pin-modal"
 
 const LINKS = [
-  // Home Education Projects Skills Experience Certificates Contact
-  { href: "#home", label: "Home" },
-  { href: "#education", label: "Education" },
-  { href: "#projects", label: "Projects" },
+  { href: "#top", label: "Home" },
+  { href: "#about", label: "About" },
   { href: "#skills", label: "Skills" },
-  { href: "#experience", label: "Experience" },
-  { href: "#certificates", label: "Certificates" },
-  { href: "#blog", label: "Blog" },
+  { href: "#work", label: "Projects" },
+  { href: "#activity", label: "Activity" },
   { href: "#contact", label: "Contact" },
 ]
 
