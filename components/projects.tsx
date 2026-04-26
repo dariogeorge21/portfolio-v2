@@ -1,24 +1,58 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { AnimatePresence, motion } from "framer-motion"
-import { ArrowUpRight, Github, Globe, Plus, X } from "lucide-react"
+import { ArrowUpRight, ArrowRight, Github, Globe, X } from "lucide-react"
 import { useMemo, useState } from "react"
-import { projects, type Project } from "@/lib/portfolio-data"
 import { SectionHeading } from "./section-heading"
+
+// Using local placeholder type to ensure the 10 items render perfectly.
+// Swap this back with your actual imported Project type when ready.
+export type Project = {
+  slug: string
+  title: string
+  subtitle: string
+  category: string
+  year: string
+  image: string
+  tags: string[]
+  role: string
+  longDescription: string
+  liveUrl?: string
+  repoUrl?: string
+}
 
 const CATEGORIES = ["All", "Product", "Web", "Tooling", "Other"] as const
 const EASE = [0.22, 1, 0.36, 1] as const
 
+// --- PLACEHOLDER DATA (10 Items) ---
+const PLACEHOLDER_PROJECTS: Project[] = Array.from({ length: 10 }).map((_, i) => ({
+  slug: `project-${i + 1}`,
+  title: `Project Title ${i + 1}`,
+  subtitle: "An exploratory design study focused on seamless user experiences and modern tech stacks.",
+  category: ["Product", "Web", "Tooling", "Other"][i % 4],
+  year: "2024",
+  image: `/placeholder-${i + 1}.jpg`, // Ensure you have images or swap this out
+  tags: ["Next.js", "Tailwind", "Framer Motion", "TypeScript"].slice(0, (i % 3) + 2),
+  role: "Lead Engineer & Designer",
+  longDescription: "Detailed case study description goes here. This outlines the challenges faced, the architecture chosen, and the final impact of the shipped product on the end users.",
+  liveUrl: "https://example.com",
+  repoUrl: "https://github.com",
+}))
+
 export function Projects() {
   const [filter, setFilter] = useState<(typeof CATEGORIES)[number]>("All")
   const [selected, setSelected] = useState<Project | null>(null)
-  const [expanded, setExpanded] = useState(false)
 
   const filtered = useMemo(() => {
-    const base = filter === "All" ? projects : projects.filter((p) => p.category === filter)
-    return expanded ? base : base.slice(0, 4)
-  }, [filter, expanded])
+    return filter === "All" 
+      ? PLACEHOLDER_PROJECTS 
+      : PLACEHOLDER_PROJECTS.filter((p) => p.category === filter)
+  }, [filter])
+
+  // Split into chunks of 10 for the dual-bento display
+  const displayItems = filtered.slice(0, 10)
 
   return (
     <section
@@ -56,10 +90,7 @@ export function Projects() {
                 key={cat}
                 role="tab"
                 aria-selected={isActive}
-                onClick={() => {
-                  setFilter(cat)
-                  setExpanded(false)
-                }}
+                onClick={() => setFilter(cat)}
                 className={[
                   "group relative inline-flex h-9 items-center rounded-full border px-4 text-xs transition-all duration-400",
                   isActive
@@ -84,69 +115,127 @@ export function Projects() {
             aria-hidden
             className="ml-auto hidden font-mono text-[10px] uppercase tracking-[0.3em] text-muted-2 md:inline"
           >
-            {filtered.length.toString().padStart(2, "0")} / {projects.length.toString().padStart(2, "0")}
+            {displayItems.length.toString().padStart(2, "0")} / {PLACEHOLDER_PROJECTS.length.toString().padStart(2, "0")}
           </span>
         </motion.div>
 
-        {/* Gallery — asymmetrical grid */}
-        <div className="mt-10 grid grid-cols-1 gap-5 md:mt-14 md:grid-cols-6 md:gap-6">
+        {/* BENTO LAYOUT GALLERY (10 Items Alternating) */}
+        <div className="mt-10 md:mt-14 space-y-5 md:space-y-6">
           <AnimatePresence mode="popLayout">
-            {filtered.map((p, i) => (
-              <ProjectCard
-                key={p.slug}
-                project={p}
-                index={i}
-                onOpen={() => setSelected(p)}
-              />
-            ))}
+            
+            {/* Block 1: Items 1-5 (Right-heavy) */}
+            {displayItems.length >= 5 && (
+              <motion.div 
+                key="block-1"
+                className="flex flex-col lg:flex-row items-stretch gap-5 md:gap-6"
+              >
+                {/* Left Column */}
+                <div className="flex w-full flex-col gap-5 lg:w-5/12 md:gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
+                    <ProjectCard project={displayItems[0]} index={0} layoutType="square" onOpen={() => setSelected(displayItems[0])} />
+                    <ProjectCard project={displayItems[1]} index={1} layoutType="square" onOpen={() => setSelected(displayItems[1])} />
+                  </div>
+                  <ProjectCard project={displayItems[2]} index={2} layoutType="rectangle" onOpen={() => setSelected(displayItems[2])} />
+                </div>
+
+                {/* Right Column */}
+                <div className="flex w-full flex-col gap-5 lg:w-7/12 md:gap-6">
+                  <ProjectCard project={displayItems[3]} index={3} layoutType="pill" onOpen={() => setSelected(displayItems[3])} />
+                  <ProjectCard project={displayItems[4]} index={4} layoutType="large" onOpen={() => setSelected(displayItems[4])} />
+                </div>
+              </motion.div>
+            )}
+
+            {/* Block 2: Items 6-10 (Left-heavy / Mirrored) */}
+            {displayItems.length >= 10 && (
+              <motion.div 
+                key="block-2"
+                className="flex flex-col lg:flex-row items-stretch gap-5 md:gap-6"
+              >
+                {/* Left Column (Flipped) */}
+                <div className="flex w-full flex-col gap-5 lg:w-7/12 md:gap-6">
+                  <ProjectCard project={displayItems[5]} index={5} layoutType="large" onOpen={() => setSelected(displayItems[5])} />
+                  <ProjectCard project={displayItems[6]} index={6} layoutType="pill" onOpen={() => setSelected(displayItems[6])} />
+                </div>
+
+                {/* Right Column (Flipped) */}
+                <div className="flex w-full flex-col gap-5 lg:w-5/12 md:gap-6">
+                  <ProjectCard project={displayItems[7]} index={7} layoutType="rectangle" onOpen={() => setSelected(displayItems[7])} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
+                    <ProjectCard project={displayItems[8]} index={8} layoutType="square" onOpen={() => setSelected(displayItems[8])} />
+                    <ProjectCard project={displayItems[9]} index={9} layoutType="square" onOpen={() => setSelected(displayItems[9])} />
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
 
-        {/* Load more */}
-        {filter === "All" && !expanded && projects.length > 4 && (
+        {/* IMAGE PLACEHOLDER TEXT */}
+        {filter === "All" && (
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mt-14 flex justify-center"
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mx-auto mt-20 max-w-3xl text-center md:mt-32"
           >
-            <button
-              onClick={() => setExpanded(true)}
-              className="group inline-flex h-12 items-center gap-2 rounded-full border border-border-strong/70 bg-surface/60 px-6 text-sm text-foreground backdrop-blur transition-all duration-500 hover:border-neon/70"
-            >
-              <Plus
-                size={14}
-                className="transition-transform duration-500 group-hover:rotate-90"
-              />
-              View more projects
-            </button>
+            <h2 className="mb-4 font-display text-2xl font-medium tracking-tight text-foreground md:text-3xl lg:text-4xl">
+              2023 is finally coming to a close.
+            </h2>
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-muted/90 md:text-lg">
+              Not the most straightforward year, perhaps, but an important one for our growing business.
+            </p>
           </motion.div>
         )}
+
+        {/* CTA TO /PROJECTS */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-14 flex justify-center"
+        >
+          <Link
+            href="/projects"
+            className="group inline-flex h-12 items-center gap-3 rounded-full border border-border-strong/70 bg-surface/60 px-8 text-sm font-medium text-foreground backdrop-blur transition-all duration-500 hover:border-neon/70 hover:bg-surface"
+          >
+            Explore all projects
+            <ArrowRight
+              size={16}
+              className="text-muted transition-all duration-500 group-hover:translate-x-1 group-hover:text-neon"
+            />
+          </Link>
+        </motion.div>
       </div>
 
-      {/* Modal */}
       <ProjectModal project={selected} onClose={() => setSelected(null)} />
     </section>
   )
 }
 
+type LayoutType = "square" | "rectangle" | "pill" | "large"
+
 function ProjectCard({
   project,
   index,
   onOpen,
+  layoutType,
 }: {
   project: Project
   index: number
   onOpen: () => void
+  layoutType: LayoutType
 }) {
-  // Asymmetric layout: featured projects span wider
-  const isLarge = project.featured || index === 0
-  const spanClass = isLarge
-    ? "md:col-span-4"
-    : index % 5 === 2
-      ? "md:col-span-2"
-      : "md:col-span-3"
+  const isPill = layoutType === "pill"
+
+  const shapeClasses = {
+    square: "aspect-square rounded-[2rem] md:rounded-[2.5rem]",
+    rectangle: "aspect-square sm:aspect-[2/1] rounded-[2rem] md:rounded-[2.5rem]",
+    pill: "h-28 lg:h-32 rounded-[2rem] lg:rounded-[3rem]",
+    large: "flex-1 min-h-[300px] lg:min-h-0 rounded-[2rem] md:rounded-[2.5rem]",
+  }
 
   return (
     <motion.article
@@ -155,113 +244,125 @@ function ProjectCard({
       whileInView={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{
-        duration: 0.8,
-        ease: EASE,
-        delay: Math.min(index * 0.08, 0.4),
-      }}
+      transition={{ duration: 0.8, ease: EASE, delay: Math.min((index % 5) * 0.08, 0.4) }}
       className={[
-        "group relative overflow-hidden rounded-2xl border border-border bg-surface transition-colors duration-500 hover:border-neon/40",
-        spanClass,
+        "group relative flex flex-col overflow-hidden border border-border bg-surface transition-all duration-500 hover:border-neon/40 hover:shadow-[0_0_40px_-15px_rgba(0,217,255,0.15)]",
+        shapeClasses[layoutType],
       ].join(" ")}
     >
       <button
         type="button"
         onClick={onOpen}
-        className="block w-full text-left"
+        className="absolute inset-0 flex w-full flex-col text-left"
         aria-label={`Open ${project.title} case study`}
-        data-cursor="hover"
       >
-        {/* Image */}
+        {/* Full Cover Placeholder Background (Gradient fallback) & Image */}
+        <div className="absolute inset-0 bg-gradient-to-br from-surface-2 to-background">
+          {/* Note: In Next.js, an invalid src will crash. You can add a placeholder image in your public folder or use this unoptimized img for purely structural testing */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
+            style={{ backgroundImage: `url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop)` }}
+          />
+          {/* Overlay Gradient for Text Readability */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent"
+          />
+        </div>
+
+        {/* Neon sweep on hover */}
         <div
-          className={[
-            "relative w-full overflow-hidden bg-surface-2",
-            isLarge ? "aspect-[16/10]" : "aspect-[16/11]",
-          ].join(" ")}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
         >
-          <Image
-            src={project.image}
-            alt={`${project.title} — ${project.subtitle}`}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 66vw, 50vw"
-            className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
-          />
-          {/* Gradient veil */}
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"
-          />
-          {/* Neon sweep on hover */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,217,255,0.18),transparent_60%)]" />
-          </div>
-          {/* Top meta */}
-          <div className="absolute inset-x-0 top-0 flex items-start justify-between p-5">
-            <span className="inline-flex h-7 items-center rounded-full border border-white/15 bg-black/40 px-3 font-mono text-[10px] uppercase tracking-[0.25em] text-white/80 backdrop-blur">
-              {project.category}
-            </span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/60">
-              {project.year}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,217,255,0.18),transparent_60%)]" />
+        </div>
+
+        {/* Embedded Content */}
+        {isPill ? (
+          <div className="relative z-10 flex h-full w-full items-center justify-between px-6 lg:px-10">
+            <div className="flex items-center gap-4 lg:gap-6">
+              <span className="hidden h-8 items-center rounded-full border border-white/15 bg-black/40 px-4 font-mono text-[10px] uppercase tracking-[0.25em] text-white/80 backdrop-blur sm:inline-flex">
+                {project.category}
+              </span>
+              <h3 className="max-w-[200px] truncate font-display text-xl font-medium tracking-tight text-white/95 sm:max-w-xs lg:max-w-md lg:text-2xl">
+                {project.title}
+              </h3>
+            </div>
+            <span
+              aria-hidden
+              className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/30 backdrop-blur transition-all duration-500 group-hover:border-neon/70 group-hover:bg-neon/10"
+            >
+              <ArrowUpRight
+                size={18}
+                className="text-white/80 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-neon"
+              />
             </span>
           </div>
-          {/* Bottom caption */}
-          <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <h3 className="font-display text-xl font-medium tracking-tight text-foreground md:text-2xl">
-                  {project.title}
-                </h3>
-                <p className="mt-1 text-sm text-muted">{project.subtitle}</p>
-              </div>
-              <span
-                aria-hidden
-                className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/30 backdrop-blur transition-all duration-500 group-hover:border-neon/70 group-hover:bg-neon/10"
-              >
-                <ArrowUpRight
-                  size={16}
-                  className="text-white/80 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-neon"
-                />
+        ) : (
+          <div className="relative z-10 flex h-full flex-col justify-between p-6 lg:p-8">
+            {/* Top Meta */}
+            <div className="flex items-start justify-between">
+              <span className="inline-flex h-7 items-center rounded-full border border-white/15 bg-black/40 px-3 font-mono text-[10px] uppercase tracking-[0.25em] text-white/80 backdrop-blur">
+                {project.category}
+              </span>
+              <span className="rounded-md bg-black/20 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-white/60 backdrop-blur">
+                {project.year}
               </span>
             </div>
-          </div>
-        </div>
 
-        {/* Footer tags */}
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-border px-5 py-4 md:px-6">
-          {project.tags.slice(0, 4).map((t) => (
-            <span
-              key={t}
-              className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted"
-            >
-              {t}
-            </span>
-          )).reduce<React.ReactNode[]>((acc, node, idx, arr) => {
-            acc.push(node)
-            if (idx < arr.length - 1)
-              acc.push(
+            {/* Bottom Caption & Tags */}
+            <div className="mt-auto flex flex-col gap-3">
+              <div>
+                <h3 className="font-display text-2xl font-medium tracking-tight text-white/95 lg:text-3xl">
+                  {project.title}
+                </h3>
+                {layoutType !== "square" && (
+                  <p className="mt-2 line-clamp-2 max-w-md text-sm text-white/70">
+                    {project.subtitle}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between pt-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  {project.tags
+                    .slice(0, layoutType === "large" ? 4 : 2)
+                    .map((t) => (
+                      <span
+                        key={t}
+                        className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50"
+                      >
+                        {t}
+                      </span>
+                    ))
+                    .reduce<React.ReactNode[]>((acc, node, idx, arr) => {
+                      acc.push(node)
+                      if (idx < arr.length - 1)
+                        acc.push(
+                          <span
+                            key={`dot-${idx}`}
+                            className="inline-block h-1 w-1 rounded-full bg-white/20"
+                          />
+                        )
+                      return acc
+                    }, [])}
+                </div>
+
                 <span
-                  key={`dot-${idx}`}
                   aria-hidden
-                  className="inline-block h-1 w-1 rounded-full bg-muted-2"
-                />,
-              )
-            return acc
-          }, [])}
-        </div>
+                  className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/30 backdrop-blur transition-all duration-500 group-hover:border-neon/70 group-hover:bg-neon/10"
+                >
+                  <ArrowUpRight
+                    size={16}
+                    className="text-white/80 transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-neon"
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       </button>
-
-      {/* Glow border on hover */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{
-          boxShadow:
-            "0 0 0 1px rgba(0,217,255,0.25), 0 30px 80px -40px rgba(0,217,255,0.45)",
-        }}
-      />
     </motion.article>
   )
 }
@@ -324,12 +425,9 @@ function ProjectModal({
             {/* Body */}
             <div className="flex-1 overflow-y-auto">
               <div className="relative aspect-[16/9] w-full overflow-hidden bg-surface-2">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  sizes="100vw"
-                  className="object-cover"
+                <div 
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ backgroundImage: `url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop)` }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-surface/80 via-transparent to-transparent" />
               </div>
