@@ -117,26 +117,67 @@ export type TimelineItem = {
   side: "left" | "right"
 }
 
+export type EducationItem = {
+  degree: string
+  institution: string
+  location: string
+  period: string
+  description: string
+  achievements: string[]
+}
+
 export const timeline: TimelineItem[] = [
   {
     year: "Current",
-    title: "Computer Science Student",
-    org: "SJCET Palai",
-    description: "Studying at St. Joseph’s College of Engineering and Technology, focusing on software development and computer science fundamentals.",
+    title: "Freelance Developer",
+    org: "Remote",
+    description: "Building web applications and tools for clients across various industries, focusing on clean design and robust functionality.",
     side: "left",
-  },
-  {
-    year: "Always",
-    title: "Curious Learner",
-    org: "Self-driven",
-    description: "Passionate about coding, continuous learning, and building practical, cool projects with a developer mindset.",
-    side: "right",
   }
 ]
 
 export const stats = [
-  { value: "~57", label: "GitHub Followers" },
+  { value: "~58", label: "GitHub Followers" },
   { value: "x2", label: "Quickdraw" },
   { value: "YOLO", label: "Achievement" },
   { value: "New Delhi", label: "Location" },
+]
+
+export const education: EducationItem[] = [
+  {
+    degree: "BTech in Computer Science and Engineering",
+    institution: "St Joseph's College of Engineering and Technology",
+    location: "Palai, Kottayam, Kerala",
+    period: "2024 - Present",
+    description: "Currently in the second semester (S4) of Computer Science and Engineering program, focusing on building a strong foundation in programming, data structures, and algorithms.",
+    achievements: [
+      "Current GPA: 8.5",
+      "Actively learning web development technologies",
+      "Exploring Data Structures and Algorithms in C++",
+    ],
+  },
+  {
+    degree: "12th (Pre-degree)",
+    institution: "St Mary's Central School",
+    location: "Idukki, Kerala",
+    period: "July 2022 - April 2024",
+    description: "Completed higher secondary education with a focus on Mathematics and Computer Science, developing a strong foundation in logical thinking and problem-solving skills.",
+    achievements: [
+      "Achieved 87.8% in final examinations",
+      "Specialized in Mathematics and Computer Science",
+      "Participated in school-level programming competitions",
+    ],
+  },
+  {
+    degree: "10th (SSLC)",
+    institution: "St Columba's School",
+    location: "New Delhi",
+    period: "April 2011 - May 2022",
+    description: "Completed secondary education with a well-rounded curriculum covering all major subjects, developing a strong academic foundation.",
+    achievements: [
+      "Achieved 72.8% in final examinations",
+      "Participated in various extracurricular activities",
+      "Developed initial interest in computers and technology",
+    ],
+  },
 ]
