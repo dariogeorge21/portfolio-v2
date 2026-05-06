@@ -274,21 +274,20 @@ function Biography() {
           line === "" ? (
             <div key={i} className="h-5" aria-hidden />
           ) : (
-            <span key={i} className="block overflow-hidden">
-              <motion.span
-                initial={{ y: "110%", opacity: 0 }}
-                whileInView={{ y: "0%", opacity: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{
-                  duration: 0.9,
-                  ease: EASE,
-                  delay: 0.06 * i + 0.2,
-                }}
-                className="inline-block"
-              >
-                {line}
-              </motion.span>
-            </span>
+            <motion.div 
+              key={i} 
+              className="block overflow-hidden"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{
+                duration: 0.6,
+                ease: EASE,
+                delay: 0.05 * i,
+              }}
+            >
+              {line}
+            </motion.div>
           ),
         )}
       </div>
