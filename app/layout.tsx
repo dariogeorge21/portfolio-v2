@@ -68,6 +68,9 @@ export default function RootLayout({
       lang="en"
       className={`${sora.variable} ${geistMono.variable} bg-background`}
     >
+      <head>
+        <meta name="apple-mobile-web-app-title" content="Dario" />
+      </head>
       <body className="font-sans antialiased selection:bg-neon selection:text-background">
         <ScrollProgress />
         <CustomCursor />
