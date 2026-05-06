@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Dario George — Developer · Computer Science",
     description:
-      "A luxury portfolio showcasing premium digital products, engineering, and design.",
+      "A portfolio showcasing the work and skills of Dario George, a developer and computer science student.",
     type: "website",
   },
   icons: {
