@@ -1,33 +1,32 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import { Github } from "lucide-react"
 
-async function getStats() {
-  const token = process.env.GITHUB_TOKEN
-  const username = "dariogeorge21"
-  
-  if (!token) {
-    return { followers: 57, publicRepos: 25 } // graceful fallback
-  }
+export function GithubWidget() {
+  const [stats, setStats] = useState({ followers: 57, publicRepos: 25 })
+  const [isLoading, setIsLoading] = useState(true)
 
-  try {
-    const userRes = await fetch(`https://api.github.com/users/${username}`, {
-      headers: { Authorization: `Bearer ${token}` },
-      next: { revalidate: 3600 }
-    })
-    
-    if (!userRes.ok) throw new Error("Failed")
-    const user = await userRes.json()
-
-    return {
-      followers: user.followers,
-      publicRepos: user.public_repos,
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch("https://api.github.com/users/dariogeorge21")
+        if (!res.ok) throw new Error("Failed")
+        const user = await res.json()
+        setStats({
+          followers: user.followers,
+          publicRepos: user.public_repos,
+        })
+      } catch (e) {
+        // Keep default fallback stats
+        setStats({ followers: 57, publicRepos: 25 })
+      } finally {
+        setIsLoading(false)
+      }
     }
-  } catch (e) {
-    return { followers: 57, publicRepos: 25 } 
-  }
-}
 
-export async function GithubWidget() {
-  const stats = await getStats()
+    fetchStats()
+  }, [])
   
   return (
     <div className="rounded-2xl border border-border bg-surface p-6 md:p-8 flex flex-col h-full">
@@ -48,11 +47,12 @@ export async function GithubWidget() {
       </div>
 
       <div className="mt-8 flex justify-center w-full relative h-[180px] bg-surface-2 rounded-xl overflow-hidden border border-border/50">
-        {/* We use external snake svg mapped from github actions */}
+        {/* We use external snake svg mapped from github actions with local fallback */}
         <picture className="w-full h-full object-cover">
-          <source media="(prefers-color-scheme: dark)" srcSet="https://raw.githubusercontent.com/dariogeorge21/dariogeorge21/output/github-contribution-grid-snake-dark.svg" />
+          {/* <source media="(prefers-color-scheme: dark)" srcSet="https://raw.githubusercontent.com/dariogeorge21/dariogeorge21/output/github-contribution-grid-snake-dark.svg" /> */}
           <source media="(prefers-color-scheme: light)" srcSet="https://raw.githubusercontent.com/dariogeorge21/dariogeorge21/output/github-contribution-grid-snake.svg" />
-          <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/dariogeorge21/dariogeorge21/output/github-contribution-grid-snake.svg" className="w-full h-full object-cover opacity-80 mix-blend-screen" />
+          {/* <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/dariogeorge21/dariogeorge21/output/github-contribution-grid-snake.svg" onError={(e) => { e.currentTarget.src = "/githubStatsGraphpng.png" }} className="w-full h-full object-cover opacity-80 mix-blend-screen" /> */}
+          <img src="/githubStatsGraphpng.png" className="w-full h-full  opacity-80 mix-blend-screen" alt="" />
         </picture>
       </div>
     </div>
