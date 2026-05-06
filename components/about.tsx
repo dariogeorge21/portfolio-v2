@@ -54,7 +54,7 @@ export function About() {
             <div className="relative">
               <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-border-strong/40 bg-surface">
                 <Image
-                  src="/dario-portrait.jpg"
+                  src="/darioImg.jpeg"
                   alt="Portrait of Dario George"
                   fill
                   sizes="(max-width: 768px) 100vw, 40vw"
