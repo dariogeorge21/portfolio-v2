@@ -51,14 +51,22 @@ export function Footer() {
 
         <div className="mt-20 flex flex-col items-start justify-between gap-6 border-t border-border pt-8 text-xs text-muted md:flex-row md:items-center">
           <p className="font-mono uppercase tracking-[0.25em]">
-            © MMXXVI · Dario George
+            © 2026 · Dario George
           </p>
           <p className="font-mono uppercase tracking-[0.25em]">
-            Hand-built with <span className="text-neon">Next.js</span> · Hosted
+            Hand-built with <span className="text-neon">NextJS</span> · Deployed
             on <span className="text-foreground">Vercel</span>
           </p>
           <p className="font-mono uppercase tracking-[0.25em]">
-            Available worldwide
+            Source code available on{" "}
+            <a
+              href="https://github.com/dariogeorge/portfolio-v2"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-neon hover:text-neon/80"
+            >
+              GitHub
+            </a>
           </p>
         </div>
       </div>
