@@ -40,15 +40,7 @@ export const metadata: Metadata = {
     description:
       "A portfolio showcasing the work and skills of Dario George, a developer and computer science student.",
     type: "website",
-  },
-  icons: {
-    icon: [
-      { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
-      { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
-      { url: "/icon.svg", type: "image/svg+xml" },
-    ],
-    apple: "/apple-icon.png",
-  },
+  }
 }
 
 export const viewport: Viewport = {
