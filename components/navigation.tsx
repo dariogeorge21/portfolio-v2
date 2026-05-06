@@ -78,12 +78,9 @@ export function Navigation() {
           >
             <span
               aria-hidden
-              className="relative inline-flex h-8 w-8 items-center justify-center rounded-full border border-border-strong/60 bg-surface transition-colors group-hover:border-neon/60"
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-border-strong/60 bg-surface transition-colors group-hover:border-neon/60"
             >
-              <span className="absolute inset-0 rounded-full bg-neon/0 transition-colors group-hover:bg-neon/10" />
-              <span className="font-display text-sm font-semibold tracking-tight">
-                DG
-              </span>
+              <img src="/darioLogo/dlogo.png" alt="Dlogo" />
             </span>
             <span className="hidden font-display text-sm font-medium tracking-tight md:inline">
               Dario George
