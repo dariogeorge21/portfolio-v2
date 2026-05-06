@@ -1,9 +1,21 @@
 "use client"
 
 import { AnimatePresence, motion } from "framer-motion"
-import { ArrowUpRight, Check, Github, Linkedin, Mail, Twitter, Instagram, Code } from "lucide-react"
+import {
+  ArrowUpRight,
+  Check,
+  Github,
+  Linkedin,
+  Mail,
+  Twitter,
+  Instagram,
+  Code,
+  X,
+} from "lucide-react"
 import { useState } from "react"
 import { SectionHeading } from "./section-heading"
+import { Turnstile } from "@marsidev/react-turnstile"
+import { submitContact } from "@/app/actions/contact"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -53,6 +65,8 @@ type FormState = {
 }
 type FormErrors = Partial<Record<keyof FormState, string>>
 
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ""
+
 export function Contact() {
   const [form, setForm] = useState<FormState>({
     name: "",
@@ -62,6 +76,8 @@ export function Contact() {
   const [errors, setErrors] = useState<FormErrors>({})
   const [focused, setFocused] = useState<keyof FormState | null>(null)
   const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle")
+  const [captchaOpen, setCaptchaOpen] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   function validate(values: FormState) {
     const e: FormErrors = {}
@@ -85,13 +101,36 @@ export function Contact() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    setSubmitError(null)
+
     const nextErrors = validate(form)
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
+
+    // CAPTCHA must appear only on submission
+    setCaptchaOpen(true)
+  }
+
+  async function handleCaptchaSuccess(token: string) {
+    setSubmitError(null)
     setStatus("submitting")
-    // Simulated submit — replace with server action / route handler
-    await new Promise((r) => setTimeout(r, 900))
-    setStatus("success")
+
+    const result = await submitContact({
+      name: form.name,
+      email: form.email,
+      message: form.message,
+      turnstileToken: token,
+    })
+
+    if (result.ok) {
+      setCaptchaOpen(false)
+      setStatus("success")
+      return
+    }
+
+    setCaptchaOpen(false)
+    setStatus("idle")
+    setSubmitError(result.error)
   }
 
   return (
@@ -336,6 +375,104 @@ export function Contact() {
                         />
                       </button>
                     </div>
+
+                    <AnimatePresence>
+                      {submitError && (
+                        <motion.p
+                          initial={{ opacity: 0, y: -4, height: 0 }}
+                          animate={{ opacity: 1, y: 0, height: "auto" }}
+                          exit={{ opacity: 0, y: -4, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="text-xs text-[#ff4d6d]"
+                          role="alert"
+                        >
+                          {submitError}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+
+                    <AnimatePresence>
+                      {captchaOpen && (
+                        <motion.div
+                          key="captcha"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="fixed inset-0 z-50 grid place-items-center bg-background/70 p-6 backdrop-blur"
+                          role="dialog"
+                          aria-modal="true"
+                          aria-label="Captcha verification"
+                        >
+                          <motion.div
+                            initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 12, scale: 0.98 }}
+                            transition={{ duration: 0.35, ease: EASE }}
+                            className="w-full max-w-md overflow-hidden rounded-2xl border border-border bg-surface p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.04)]"
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <div>
+                                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
+                                  One more step
+                                </p>
+                                <h3 className="mt-2 font-display text-xl tracking-tight text-foreground">
+                                  Verify you’re human
+                                </h3>
+                                <p className="mt-2 text-sm text-muted">
+                                  This helps keep the inbox clean.
+                                </p>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (status === "submitting") return
+                                  setCaptchaOpen(false)
+                                }}
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface-2 text-muted transition-colors hover:border-neon/50 hover:text-neon"
+                                aria-label="Close captcha"
+                              >
+                                <X size={16} />
+                              </button>
+                            </div>
+
+                            <div className="mt-5 rounded-xl border border-border/60 bg-surface-2 p-4">
+                              {TURNSTILE_SITE_KEY ? (
+                                <Turnstile
+                                  siteKey={TURNSTILE_SITE_KEY}
+                                  onSuccess={handleCaptchaSuccess}
+                                  options={{
+                                    theme: "dark",
+                                  }}
+                                />
+                              ) : (
+                                <p className="text-sm text-[#ff4d6d]">
+                                  Missing `NEXT_PUBLIC_TURNSTILE_SITE_KEY`.
+                                </p>
+                              )}
+                            </div>
+
+                            <div className="mt-5 flex items-center justify-between gap-4">
+                              <p className="text-xs text-muted">
+                                {status === "submitting"
+                                  ? "Submitting…"
+                                  : "Complete the challenge to send."}
+                              </p>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (status === "submitting") return
+                                  setCaptchaOpen(false)
+                                }}
+                                className="inline-flex h-10 items-center rounded-full border border-border-strong/70 bg-surface-2 px-5 text-sm text-foreground transition-colors hover:border-neon/60"
+                                disabled={status === "submitting"}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </motion.div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.form>
                 )}
               </AnimatePresence>
