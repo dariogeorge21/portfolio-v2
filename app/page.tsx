@@ -3,6 +3,7 @@ import { Hero } from "@/components/hero"
 import { Projects } from "@/components/projects"
 import { About } from "@/components/about"
 import { Skills } from "@/components/skills"
+import { Education } from "@/components/education"
 import { ActivitySection } from "@/components/activity-section"
 import { Contact } from "@/components/contact"
 import { Footer } from "@/components/footer"
@@ -13,6 +14,7 @@ export default function Page() {
       <Navigation />
       <Hero />
       <About />
+      <Education />
       < Skills />
       <Projects />
       <ActivitySection />
