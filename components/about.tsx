@@ -4,7 +4,7 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { SectionHeading } from "./section-heading"
 import { stats, timeline } from "@/lib/portfolio-data"
-import { Award, Code2, GitBranch, Star } from "lucide-react"
+import { Award, Code2, GitBranch, Star, Linkedin, Github, ArrowUpRight } from "lucide-react"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -86,10 +86,79 @@ export function About() {
                 </div>
               </div>
               {/* Decorative corner accent */}
-              <span
-                aria-hidden
-                className="absolute -bottom-3 -right-3 h-16 w-16 rounded-xl border border-neon/40 bg-neon/[0.05] backdrop-blur glow-neon-sm"
-              />
+              
+            </div>
+            {/* Link to LinkedIn and Github Profile as 2 Cards */}
+            <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-5">
+              {[
+                {
+                  href: "https://www.linkedin.com/in/dariogeorge/",
+                  label: "LinkedIn",
+                  icon: Linkedin,
+                  desc: "Connect & collaborate",
+                  color: "from-blue-500/20 to-cyan-500/10",
+                },
+                {
+                  href: "https://github.com/dariogeorge",
+                  label: "GitHub",
+                  icon: Github,
+                  desc: "Code & projects",
+                  color: "from-purple-500/20 to-pink-500/10",
+                },
+              ].map((link, i) => (
+                <motion.a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{
+                    duration: 0.6,
+                    ease: EASE,
+                    delay: 0.1 * i,
+                  }}
+                  whileHover={{ scale: 1.05, y: -4 }}
+                  className="group relative overflow-hidden rounded-xl border border-border bg-surface p-5 sm:p-6 transition-all duration-300 hover:border-neon/50"
+                >
+                  {/* Background gradient on hover */}
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${link.color} opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
+                    aria-hidden
+                  />
+                  
+                  {/* Content */}
+                  <div className="relative z-10 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-lg bg-surface/50 p-2.5 group-hover:bg-neon/10 transition-colors duration-300">
+                        <link.icon
+                          size={20}
+                          className="text-neon group-hover:scale-110 transition-transform duration-300"
+                        />
+                      </div>
+                      <div>
+                        <p className="font-display text-base font-semibold text-foreground">
+                          {link.label}
+                        </p>
+                        <p className="text-xs text-muted group-hover:text-muted/80 transition-colors">
+                          {link.desc}
+                        </p>
+                      </div>
+                    </div>
+                    <ArrowUpRight
+                      size={16}
+                      className="text-muted opacity-0 group-hover:opacity-100 group-hover:text-neon transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                    />
+                  </div>
+
+                  {/* Subtle glow effect on hover */}
+                  <div
+                    className="absolute -inset-full bg-gradient-to-r from-neon/0 via-neon/5 to-neon/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"
+                    aria-hidden
+                  />
+                </motion.a>
+              ))}
             </div>
           </motion.div>
 
