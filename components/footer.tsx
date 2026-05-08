@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { ArrowUp } from "lucide-react"
+import { details } from "@/lib/portfolio-data"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -51,7 +52,7 @@ export function Footer() {
 
         <div className="mt-20 flex flex-col items-start justify-between gap-6 border-t border-border pt-8 text-xs text-muted md:flex-row md:items-center">
           <p className="font-mono uppercase tracking-[0.25em]">
-            © 2026 · Dario George
+            © {new Date().getFullYear()} {details[0].value}
           </p>
           <p className="font-mono uppercase tracking-[0.25em]">
             Hand-built with <span className="text-neon">NextJS</span> · Deployed
