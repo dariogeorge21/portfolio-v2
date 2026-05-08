@@ -4,16 +4,13 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { SectionHeading } from "./section-heading"
 import { stats, timeline } from "@/lib/portfolio-data"
-import { Award, Code2, GitBranch, Star, Linkedin, Github, ArrowUpRight } from "lucide-react"
+import { Linkedin, Github, ArrowUpRight } from "lucide-react"
+import { BADGES } from "@/lib/portfolio-data"
+import { details, lines } from "@/lib/portfolio-data"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
-const BADGES = [
-  { icon: Star, label: "Arctic Code Vault", sub: "2020" },
-  { icon: Award, label: "Pro Contributor", sub: "500+ commits" },
-  { icon: GitBranch, label: "Open Source", sub: "3k★ maintainer" },
-  { icon: Code2, label: "Pair Extraordinaire", sub: "Team-first" },
-]
+
 
 export function About() {
   return (
@@ -54,8 +51,8 @@ export function About() {
             <div className="relative">
               <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-border-strong/40 bg-surface">
                 <Image
-                  src="/darioImg.jpeg"
-                  alt="Portrait of Dario George"
+                  src={details.find((d) => d.label === "ImageLink")?.value || "/darioImg.jpeg"}
+                  alt={`Portrait of ${details.find((d) => d.label === "Name")?.value}` || "Dario George"}
                   fill
                   sizes="(max-width: 768px) 100vw, 40vw"
                   className="object-cover"
@@ -77,11 +74,11 @@ export function About() {
                       Portrait
                     </p>
                     <p className="mt-1 font-display text-lg tracking-tight text-foreground">
-                      Dario George
+                      {details.find((d) => d.label === "Name")?.value || "Dario George"}
                     </p>
                   </div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
-                    2026
+                    {new Date().getFullYear()}
                   </p>
                 </div>
               </div>
@@ -92,14 +89,14 @@ export function About() {
             <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-5">
               {[
                 {
-                  href: "https://www.linkedin.com/in/dariogeorge/",
+                  href: details.find((d) => d.label === "LinkedIn")?.value || "#",
                   label: "LinkedIn",
                   icon: Linkedin,
                   desc: "Connect & collaborate",
                   color: "from-blue-500/20 to-cyan-500/10",
                 },
                 {
-                  href: "https://github.com/dariogeorge",
+                  href: details.find((d) => d.label === "GitHub")?.value || "#",
                   label: "GitHub",
                   icon: Github,
                   desc: "Code & projects",
@@ -315,16 +312,6 @@ export function About() {
  * Biography with staggered line reveal.
  */
 function Biography() {
-  const lines = [
-    "I am an enthusiastic developer who thrives on building",
-    "practical and cool projects. With a builder-oriented mindset,",
-    "I love turning complex problems into elegant software solutions",
-    "and always enjoy learning new tools and paradigms.",
-    "",
-    "Currently pursuing my Computer Science degree, I am constantly",
-    "evolving my skill set. Whether it's crafting scalable backends",
-    "or engaging user interfaces, I'm always ready for the next challenge.",
-  ]
 
   return (
     <div>
