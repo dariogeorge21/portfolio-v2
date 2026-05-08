@@ -12,7 +12,7 @@ import {
 import { ArrowUpRight, ArrowRight, Github, Globe, X } from "lucide-react"
 import { useMemo, useState } from "react"
 import { SectionHeading } from "./section-heading"
-import portfolioProjects from "./data/projects-data"
+import { portfolioProjectList } from "@/lib/portfolio-data"
 
 export type Project = {
   slug: string
@@ -37,8 +37,8 @@ export function Projects() {
 
   const filtered = useMemo(() => {
     return filter === "All"
-      ? portfolioProjects
-      : portfolioProjects.filter((p) => p.category === filter)
+      ? portfolioProjectList
+      : portfolioProjectList.filter((p) => p.category === filter)
   }, [filter])
 
   const displayItems = filtered.slice(0, 10)
@@ -55,7 +55,7 @@ export function Projects() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.22] [background-image:radial-gradient(rgba(255,255,255,0)_1px,transparent_1px)] [background-size:18px_18px] [mask-image:radial-gradient(ellipse_at_center,black_35%,transparent_78%)]"
+        className="pointer-events-none absolute inset-0 opacity-[0.22] bg-[radial-gradient(rgba(255,255,255,0)_1px,transparent_1px)] bg-size-[18px_18px] mask-[radial-gradient(ellipse_at_center,black_35%,transparent_78%)]"
       />
 
       <div className="relative mx-auto max-w-9xl px-6 md:px-10 items-center">
@@ -321,7 +321,7 @@ function ProjectCard({
           {/* Background Layer: Image + Gradient */}
           <div className="absolute inset-0 z-0 bg-surface-2">
             <div
-              className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
+              className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay transition-transform duration-1200 ease-out group-hover:scale-[1.05]"
               style={{
                 backgroundImage: `url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop)`,
               }}
@@ -329,7 +329,7 @@ function ProjectCard({
             {/* Deep overlay to make white text pop */}
             <div
               aria-hidden
-              className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/60 to-background/20"
+              className="absolute inset-0 bg-linear-to-t from-background/95 via-background/60 to-background/20"
             />
           </div>
 
@@ -344,13 +344,13 @@ function ProjectCard({
                   <span className="hidden h-8 items-center rounded-full border border-white/15 bg-black/20 px-4 font-mono text-[10px] uppercase tracking-[0.25em] text-white/80 backdrop-blur-md sm:inline-flex">
                     {project.category}
                   </span>
-                  <h3 className="max-w-[200px] truncate font-display text-xl font-medium tracking-tight text-white/95 sm:max-w-xs lg:max-w-md lg:text-2xl">
+                  <h3 className="max-w-50 truncate font-display text-xl font-medium tracking-tight text-white/95 sm:max-w-xs lg:max-w-md lg:text-2xl">
                     {project.title}
                   </h3>
                 </div>
                 <span
                   aria-hidden
-                  className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/20 backdrop-blur-md transition-all duration-500 group-hover:border-neon/70 group-hover:bg-neon/10"
+                  className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/20 backdrop-blur-md transition-all duration-500 group-hover:border-neon/70 group-hover:bg-neon/10"
                 >
                   <ArrowUpRight
                     size={18}
@@ -410,7 +410,7 @@ function ProjectCard({
 
                     <span
                       aria-hidden
-                      className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/20 backdrop-blur-md transition-all duration-500 group-hover:border-neon/70 group-hover:bg-neon/10"
+                      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/20 backdrop-blur-md transition-all duration-500 group-hover:border-neon/70 group-hover:bg-neon/10"
                     >
                       <ArrowUpRight
                         size={16}
@@ -444,7 +444,7 @@ function ProjectModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-[90] flex items-end justify-center overflow-hidden md:items-center md:p-6"
+          className="fixed inset-0 z-90 flex items-end justify-center overflow-hidden md:items-center md:p-6"
           role="dialog"
           aria-modal="true"
           aria-label={`${project.title} case study`}
@@ -476,7 +476,7 @@ function ProjectModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border-strong/60 bg-surface-2 text-foreground transition-colors hover:border-neon/60"
+                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-strong/60 bg-surface-2 text-foreground transition-colors hover:border-neon/60"
                 aria-label="Close dialog"
               >
                 <X size={16} />
@@ -485,14 +485,14 @@ function ProjectModal({
 
             {/* Body */}
             <div className="flex-1 overflow-y-auto">
-              <div className="relative aspect-[16/9] w-full overflow-hidden bg-surface-2">
+              <div className="relative aspect-video w-full overflow-hidden bg-surface-2">
                 <div
                   className="absolute inset-0 bg-cover bg-center"
                   style={{
                     backgroundImage: `url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop)`,
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-surface/90 via-surface/40 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-surface/90 via-surface/40 to-transparent" />
               </div>
 
               <div className="grid grid-cols-1 gap-8 p-6 md:grid-cols-3 md:p-8">
@@ -533,7 +533,7 @@ function ProjectModal({
                   href={project.liveUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="group inline-flex h-11 items-center gap-2 rounded-full border border-neon/50 bg-neon/[0.08] px-5 text-sm font-medium text-foreground transition-all duration-500 hover:border-neon hover:bg-neon/15"
+                  className="group inline-flex h-11 items-center gap-2 rounded-full border border-neon/50 bg-neon/8 px-5 text-sm font-medium text-foreground transition-all duration-500 hover:border-neon hover:bg-neon/15"
                 >
                   <Globe size={14} />
                   Live site
