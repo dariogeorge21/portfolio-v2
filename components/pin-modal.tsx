@@ -10,7 +10,7 @@ interface PinModalProps {
   onClose: () => void
 }
 
-const CORRECT_PIN = "1234" // Change this to your desired PIN
+const CORRECT_PIN  = process.env.WORKSPACE_PIN || 1234; // Change this to your desired PIN
 
 export function PinModal({ isOpen, onClose }: PinModalProps) {
   const [pin, setPin] = useState("")
