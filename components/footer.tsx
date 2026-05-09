@@ -52,7 +52,7 @@ export function Footer() {
 
         <div className="mt-20 flex flex-col items-start justify-between gap-6 border-t border-border pt-8 text-xs text-muted md:flex-row md:items-center">
           <p className="font-mono uppercase tracking-[0.25em]">
-            © {new Date().getFullYear()} {details[0].value}
+            © {new Date().getFullYear()} {details.name}
           </p>
           <p className="font-mono uppercase tracking-[0.25em]">
             Hand-built with <span className="text-neon">NextJS</span> · Deployed
