@@ -16,47 +16,10 @@ import { useState } from "react"
 import { SectionHeading } from "./section-heading"
 import { Turnstile } from "@marsidev/react-turnstile"
 import { submitContact } from "@/app/actions/contact"
+import { SOCIALS } from "@/lib/portfolio-data"
+import { contactContent } from "@/lib/portfolio-data"
 
 const EASE = [0.22, 1, 0.36, 1] as const
-
-const SOCIALS = [
-  {
-    label: "Email",
-    handle: "edu.dariogeorge21@gmail.com",
-    href: "mailto:edu.dariogeorge21@gmail.com",
-    icon: Mail,
-  },
-  {
-    label: "GitHub",
-    handle: "@dariogeorge21",
-    href: "https://github.com/dariogeorge21",
-    icon: Github,
-  },
-  {
-    label: "LinkedIn",
-    handle: "in/dariogeorge21",
-    href: "https://linkedin.com/in/dariogeorge21",
-    icon: Linkedin,
-  },
-  {
-    label: "X (Twitter)",
-    handle: "@dariogeorge21",
-    href: "https://x.com/dariogeorge21",
-    icon: Twitter,
-  },
-  {
-    label: "Instagram",
-    handle: "@dariogeorge21",
-    href: "https://instagram.com/dariogeorge21",
-    icon: Instagram,
-  },
-  {
-    label: "LeetCode",
-    handle: "dariogeorge21",
-    href: "https://leetcode.com/dariogeorge21",
-    icon: Code,
-  },
-]
 
 type FormState = {
   name: string
@@ -221,11 +184,10 @@ export function Contact() {
                   aria-hidden
                   className="inline-block h-2 w-2 rounded-full bg-neon animate-neon-pulse"
                 />
-                Open to select engagements — Q2 2026.
+                {contactContent.topHead}
               </p>
               <p className="mt-2 text-xs leading-relaxed text-muted">
-                Founding engineering roles, R&amp;D collaborations, and
-                invite-only client work. Typical reply within 24 hours.
+                {contactContent.subHead}
               </p>
             </motion.div>
           </div>
@@ -435,7 +397,12 @@ export function Contact() {
                               </button>
                             </div>
 
-                            <div className="mt-5 rounded-xl border border-border/60 bg-surface-2 p-4">
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ duration: 0.3 }}
+                              className="mt-5 rounded-xl border border-border/60 bg-surface-2 p-4"
+                            >
                               {TURNSTILE_SITE_KEY ? (
                                 <Turnstile
                                   siteKey={TURNSTILE_SITE_KEY}
@@ -449,7 +416,22 @@ export function Contact() {
                                   Missing `NEXT_PUBLIC_TURNSTILE_SITE_KEY`.
                                 </p>
                               )}
-                            </div>
+                              <AnimatePresence>
+                                {status === "submitting" && (
+                                  <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="absolute inset-0 flex items-center justify-center rounded-xl bg-surface-2/80 backdrop-blur-sm"
+                                  >
+                                    <div className="flex flex-col items-center gap-3">
+                                      <div className="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-border border-t-neon" />
+                                      <p className="text-xs text-muted">Verifying…</p>
+                                    </div>
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
+                            </motion.div>
 
                             <div className="mt-5 flex items-center justify-between gap-4">
                               <p className="text-xs text-muted">
