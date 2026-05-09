@@ -4,12 +4,6 @@ import { AnimatePresence, motion } from "framer-motion"
 import {
   ArrowUpRight,
   Check,
-  Github,
-  Linkedin,
-  Mail,
-  Twitter,
-  Instagram,
-  Code,
   X,
 } from "lucide-react"
 import { useState } from "react"
