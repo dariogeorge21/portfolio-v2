@@ -1,4 +1,4 @@
-import { Code2, GitBranch, Award, Star } from "lucide-react"
+import { Code2, GitBranch, Award, Star, Code, Instagram, Twitter, Linkedin, Github, Mail } from "lucide-react"
 
 
 export const BADGES: { icon: React.ComponentType; label: string; sub: string }[] = [
@@ -18,6 +18,11 @@ export const lines: string[] = [
     "evolving my skill set. Whether it's crafting scalable backends",
     "or engaging user interfaces, I'm always ready for the next challenge.",
   ]
+
+export const contactContent: { topHead: string; subHead: string } = {
+  "topHead" : "Open to select engagements — Q2 2026.",
+  "subHead" : "Founding engineering roles, R&amp;D collaborations, and invite-only client work. Typical reply within 24 hours."
+}
 
 export const details: Record<string, string> = {
   "code": "21DG2026",
@@ -41,6 +46,13 @@ export const details: Record<string, string> = {
 export type HeadlineDetails = {
   headline: string
   tags: string[]
+}
+
+export type SocialLinks = {
+  label: string
+  handle: string
+  href: string
+  icon: React.ComponentType
 }
 
 export const HeadlineDetails: HeadlineDetails = {
@@ -469,3 +481,41 @@ export const portfolioProjects = [
 ];
 
 
+export const SOCIALS: SocialLinks[] = [
+  {
+    label: "Email",
+    handle: "edu.dariogeorge21@gmail.com",
+    href: "mailto:edu.dariogeorge21@gmail.com",
+    icon: Mail,
+  },
+  {
+    label: "GitHub",
+    handle: "@dariogeorge21",
+    href: "https://github.com/dariogeorge21",
+    icon: Github,
+  },
+  {
+    label: "LinkedIn",
+    handle: "in/dariogeorge21",
+    href: "https://linkedin.com/in/dariogeorge21",
+    icon: Linkedin,
+  },
+  {
+    label: "X (Twitter)",
+    handle: "@dariogeorge21",
+    href: "https://x.com/dariogeorge21",
+    icon: Twitter,
+  },
+  {
+    label: "Instagram",
+    handle: "@dariogeorge21",
+    href: "https://instagram.com/dariogeorge21",
+    icon: Instagram,
+  },
+  {
+    label: "LeetCode",
+    handle: "dariogeorge21",
+    href: "https://leetcode.com/dariogeorge21",
+    icon: Code,
+  },
+]
