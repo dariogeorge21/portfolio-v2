@@ -19,22 +19,24 @@ export const lines: string[] = [
     "or engaging user interfaces, I'm always ready for the next challenge.",
   ]
 
-export const details: { label: string; value: string }[] = [
-  { label: "Code", value: "21DG2026" },
-  { label: "Name", value: "Dario George" },
-  { label: "Location", value: "New Delhi, India" },
-  { label: "GitHub", value: "https://github.com/dariogeorge21" },
-  { label: "LinkedIn", value: "https://linkedin.com/in/dariogeorge21" },
-  { label: "Email", value: "edu.dariogeorge21@gmail.com" },
-  { label: "X", value: "https://x.com/dariogeorge21" },
-  { label: "Phone", value: "+91 75609 77040" },
-  { label: "Current Role", value: "Freelance Developer" },
-  { label: "ImageLink", value: "/darioImg.jpeg" },
-  { label: "Resume", value: "https://dariogeorge.in/resume.pdf" },
-  { label: "BuyMeACoffee", value: "https://www.buymeacoffee.com/dariogeorge21" },
-  
-  
-]
+export const details: Record<string, string> = {
+  "code": "21DG2026",
+  "name": "Dario George",
+  "location": "New Delhi, India",
+  "locationType": "Remote-friendly",
+  "website": "https://dariogeorge.in",
+  "role": "Freelance Developer",
+  "github": "https://github.com/dariogeorge21",
+  "linkedin": "https://linkedin.com/in/dariogeorge21",
+  "email": "edu.dariogeorge21@gmail.com",
+  "x": "https://x.com/dariogeorge21",
+  "phone": "+91 75609 77040",
+  "status": "Undergrad Student",
+  "statusLocation" : "SJCET Palai",
+  "imageLink": "/darioImg.jpeg",
+  "resume": "https://dariogeorge.in/resume.pdf",
+  "buyMeACoffee": "https://www.buymeacoffee.com/dariogeorge21"
+}
 
 export type HeadlineDetails = {
   headline: string
