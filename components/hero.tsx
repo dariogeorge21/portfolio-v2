@@ -4,6 +4,9 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { ArrowDown, ArrowUpRight, Sparkles } from "lucide-react"
 import { useRef } from "react"
 import { ParticleField } from "./particle-field"
+import { HeadlineDetails } from "@/lib/portfolio-data"
+import { details } from "@/lib/portfolio-data"
+import Head from "next/head"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -18,8 +21,6 @@ export function Hero() {
   const bgY = useTransform(scrollYProgress, [0, 1], [0, 120])
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 60])
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
-
-  const headline = ["CS Student", "Developer", "Love Exploring", "Lifelong Learner"]
 
   return (
     <section
@@ -63,13 +64,13 @@ export function Hero() {
             className="h-px w-12 bg-gradient-to-r from-transparent via-neon/80 to-transparent"
           />
           <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-muted">
-            <span className="text-neon">◆</span>&nbsp;&nbsp;Portfolio · 21DG2026
+            <span className="text-neon">◆</span>&nbsp;&nbsp;Portfolio · {details.name}
           </span>
         </motion.div>
 
         {/* Headline */}
         <h1 className="mt-8 pb-4 font-display text-[14vw] font-light leading-[0.92] tracking-[-0.035em] text-balance md:text-[104px] lg:text-[128px]">
-          {headline.map((word, i) => (
+          {HeadlineDetails.tags.map((word, i) => (
             <span key={i} className="block overflow-hidden pb-2">
               <motion.span
                 initial={{ y: "110%", opacity: 0 }}
@@ -119,9 +120,8 @@ export function Hero() {
             className="md:col-span-5"
           >
             <p className="max-w-md text-[15px] leading-relaxed text-muted md:text-base">
-              I&apos;m <span className="text-foreground">Dario George</span> —
-              a computer science student and developer building practical and cool 
-              projects. Focused on continuous learning and solving real problems.
+              I&apos;m <span className="text-foreground">{details.name}</span> —
+              {HeadlineDetails.headline}
             </p>
           </motion.div>
 
@@ -134,8 +134,8 @@ export function Hero() {
           >
             <StatItem
               label="Based"
-              value="New Delhi"
-              sub="Remote-friendly"
+              value={details.location}
+              sub={details.locationType}
             />
             <StatItem
               label="Status"
@@ -145,10 +145,10 @@ export function Hero() {
                     <span className="absolute inset-0 rounded-full bg-neon opacity-60 animate-ping" />
                     <span className="relative inline-block h-2 w-2 rounded-full bg-neon" />
                   </span>
-                  Student
+                  {details.status}
                 </span>
               }
-              sub="SJCET Palai"
+              sub={details.statusLocation}
             />
           </motion.div>
 
@@ -175,7 +175,7 @@ export function Hero() {
               />
             </a>
             <a
-              href="https://www.buymeacoffee.com/dariogeorge21"
+              href={details.buyMeACoffee}
               target="_blank"
               rel="noreferrer"
               className="group inline-flex h-12 items-center gap-2 text-sm text-muted transition-colors hover:text-foreground"
