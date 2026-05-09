@@ -51,8 +51,8 @@ export function About() {
             <div className="relative">
               <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-border-strong/40 bg-surface">
                 <Image
-                  src={details.find((d) => d.label === "ImageLink")?.value || "/darioImg.jpeg"}
-                  alt={`Portrait of ${details.find((d) => d.label === "Name")?.value}` || "Dario George"}
+                  src={details.imageLink || "/darioImg.jpeg"}
+                  alt={`Portrait of ${details.name}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 40vw"
                   className="object-cover"
@@ -74,7 +74,7 @@ export function About() {
                       Portrait
                     </p>
                     <p className="mt-1 font-display text-lg tracking-tight text-foreground">
-                      {details.find((d) => d.label === "Name")?.value || "Dario George"}
+                      {details.name || "Dario George"}
                     </p>
                   </div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
@@ -89,14 +89,14 @@ export function About() {
             <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-5">
               {[
                 {
-                  href: details.find((d) => d.label === "LinkedIn")?.value || "#",
+                  href: details.linkedIn || "#",
                   label: "LinkedIn",
                   icon: Linkedin,
                   desc: "Connect & collaborate",
                   color: "from-blue-500/20 to-cyan-500/10",
                 },
                 {
-                  href: details.find((d) => d.label === "GitHub")?.value || "#",
+                  href: details.github || "#",
                   label: "GitHub",
                   icon: Github,
                   desc: "Code & projects",
