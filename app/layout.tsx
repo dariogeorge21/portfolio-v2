@@ -4,6 +4,8 @@ import { Sora, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { CustomCursor } from "@/components/custom-cursor"
 import { ScrollProgress } from "@/components/scroll-progress"
+import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
 
 const sora = Sora({
   subsets: ["latin"],
@@ -56,18 +58,18 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${sora.variable} ${geistMono.variable} bg-background`}
-    >
+    <html lang="en" className={`${sora.variable} ${geistMono.variable}`}>
       <head>
         <meta name="apple-mobile-web-app-title" content="Dario" />
       </head>
       <body className="font-sans antialiased selection:bg-neon selection:text-background">
-        <ScrollProgress />
-        <CustomCursor />
-        {children}
-        {process.env.NODE_ENV === "production" && <Analytics />}
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <ScrollProgress />
+          <CustomCursor />
+          {children}
+          <Toaster />
+          {process.env.NODE_ENV === "production" && <Analytics />}
+        </ThemeProvider>
       </body>
     </html>
   )
