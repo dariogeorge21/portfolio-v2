@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-import type { SkillGroup, Skill as SkillModel } from "@prisma/client"
 import { skillSchema, type SkillInput } from "@/validators/skills"
 import { createSkill, updateSkill } from "@/app/workspace/(cms)/skills/actions"
 import { Button } from "@/components/ui/button"
@@ -39,7 +38,7 @@ export function SkillForm({
   mode: "create" | "edit"
   skillId?: string
   initial: SkillInput
-  groups: Pick<SkillGroup, "id" | "label">[]
+  groups: { id: string; label: string }[]
 }) {
   const router = useRouter()
   const { toast } = useToast()
