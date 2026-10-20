@@ -191,7 +191,7 @@ export function About() {
               <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
                 GitHub · achievements
               </p>
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {BADGES.map((b, i) => (
                   <motion.div
                     key={b.label}

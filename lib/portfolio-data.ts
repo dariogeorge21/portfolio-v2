@@ -2,7 +2,7 @@ import { Code2, GitBranch, Award, Star, Code, Instagram, Twitter, Linkedin, Gith
 
 
 export const BADGES: { icon: React.ComponentType; label: string; sub: string }[] = [
-  { icon: Star, label: "Arctic Code Vault", sub: "2020" },
+
   { icon: Award, label: "Pro Contributor", sub: "500+ commits" },
   { icon: GitBranch, label: "Open Source", sub: "3k★ maintainer" },
   { icon: Code2, label: "Pair Extraordinaire", sub: "Team-first" },
