@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Github } from "lucide-react"
+import { GithubContributions } from "./github-contributions"
 
 export function GithubWidget() {
   const [stats, setStats] = useState({ followers: 57, publicRepos: 25 })
@@ -46,14 +47,8 @@ export function GithubWidget() {
         </div>
       </div>
 
-      <div className="mt-8 flex justify-center w-full relative h-[180px] bg-surface-2 rounded-xl overflow-hidden border border-border/50">
-        {/* We use external snake svg mapped from github actions with local fallback */}
-        <picture className="w-full h-full object-cover">
-          {/* <source media="(prefers-color-scheme: dark)" srcSet="https://raw.githubusercontent.com/dariogeorge21/dariogeorge21/output/github-contribution-grid-snake-dark.svg" /> */}
-          <source media="(prefers-color-scheme: light)" srcSet="https://raw.githubusercontent.com/dariogeorge21/dariogeorge21/output/github-contribution-grid-snake.svg" />
-          {/* <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/dariogeorge21/dariogeorge21/output/github-contribution-grid-snake.svg" onError={(e) => { e.currentTarget.src = "/githubStatsGraphpng.png" }} className="w-full h-full object-cover opacity-80 mix-blend-screen" /> */}
-          <img src="/githubStatsGraphpng.png" className="w-full h-full  opacity-80 mix-blend-screen" alt="" />
-        </picture>
+      <div className="mt-8 w-full">
+        <GithubContributions username="dariogeorge21" />
       </div>
     </div>
   )
