@@ -1,7 +1,7 @@
 import { Code2, GitBranch, Award, Star, Code, Instagram, Twitter, Linkedin, Github, Mail } from "lucide-react"
 
 
-export const BADGES: { icon: React.ComponentType; label: string; sub: string }[] = [
+export const BADGES: { icon: React.ComponentType<{ size?: number; className?: string }>; label: string; sub: string }[] = [
 
   { icon: Award, label: "Pro Contributor", sub: "500+ commits" },
   { icon: GitBranch, label: "Open Source", sub: "3k★ maintainer" },
@@ -52,7 +52,7 @@ export type SocialLinks = {
   label: string
   handle: string
   href: string
-  icon: React.ComponentType
+  icon: React.ComponentType<{ size?: number; className?: string }>
 }
 
 export const HeadlineDetails: HeadlineDetails = {

@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { Menu, X } from "lucide-react"
-import { PinModal } from "./pin-modal"
 
 const LINKS = [
   { href: "#top", label: "Home" },
@@ -18,7 +17,6 @@ export function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState<string>("#home")
-  const [pinModalOpen, setPinModalOpen] = useState(false)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -121,9 +119,8 @@ export function Navigation() {
           </ul>
 
           <div className="hidden md:block">
-            <button
-              onClick={() => setPinModalOpen(true)}
-              type="button"
+            <a
+              href="#contact"
               className="group relative inline-flex h-10 items-center gap-2 overflow-hidden rounded-full border border-border-strong/70 bg-surface/60 px-5 text-sm font-medium text-foreground backdrop-blur transition-all duration-500 hover:border-neon/70"
             >
               <span
@@ -131,13 +128,13 @@ export function Navigation() {
                 className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-neon/20 to-transparent transition-transform duration-700 group-hover:translate-x-full"
               />
               <span className="relative flex items-center gap-2">
-                Workspace
+                Let&apos;s talk
                 <span
                   aria-hidden
                   className="inline-block h-1.5 w-1.5 rounded-full bg-neon animate-neon-pulse"
                 />
               </span>
-            </button>
+            </a>
           </div>
 
           {/* Mobile trigger */}
@@ -229,11 +226,6 @@ export function Navigation() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <PinModal
-        isOpen={pinModalOpen}
-        onClose={() => setPinModalOpen(false)}
-      />
     </>
   )
 }
