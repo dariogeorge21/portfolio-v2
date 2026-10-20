@@ -225,7 +225,7 @@ export function Contact() {
                       Thanks for reaching out, {form.name || "friend"}. I&apos;ll
                       respond from{" "}
                       <span className="text-foreground">
-                        edu.dariogeorge21@gmail.com
+                        mail.dariogeorge@gmail.com
                       </span>{" "}
                       within a day.
                     </p>

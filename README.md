@@ -100,7 +100,7 @@ Edit the exported `projects`, `skillGroups`, `timeline`, and `stats` arrays to m
 
 | Platform | Handle |
 |---|---|
-| Email | edu.dariogeorge21@gmail.com |
+| Email | mail.dariogeorge@gmail.com |
 | GitHub | [@dariogeorge21](https://github.com/dariogeorge21) |
 | LinkedIn | [in/dariogeorge21](https://linkedin.com/in/dariogeorge21) |
 | X (Twitter) | [@dariogeorge21](https://x.com/dariogeorge21) |

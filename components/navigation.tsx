@@ -219,10 +219,10 @@ export function Navigation() {
                   Say hello
                 </p>
                 <a
-                  href="mailto:edu.dariogeorge21@gmail.com"
+                  href="mailto:mail.dariogeorge@gmail.com"
                   className="mt-2 block font-display text-lg tracking-tight text-foreground"
                 >
-                  edu.dariogeorge21@gmail.com
+                  mail.dariogeorge@gmail.com
                 </a>
               </div>
             </motion.div>

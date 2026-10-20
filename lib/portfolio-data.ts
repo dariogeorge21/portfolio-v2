@@ -33,7 +33,7 @@ export const details: Record<string, string> = {
   "role": "Freelance Developer",
   "github": "https://github.com/dariogeorge21",
   "linkedin": "https://linkedin.com/in/dariogeorge21",
-  "email": "edu.dariogeorge21@gmail.com",
+  "email": "mail.dariogeorge@gmail.com",
   "x": "https://x.com/dariogeorge21",
   "phone": "+91 75609 77040",
   "status": "Undergrad Student",
@@ -484,8 +484,8 @@ export const portfolioProjects = [
 export const SOCIALS: SocialLinks[] = [
   {
     label: "Email",
-    handle: "edu.dariogeorge21@gmail.com",
-    href: "mailto:edu.dariogeorge21@gmail.com",
+    handle: "mail.dariogeorge@gmail.com",
+    href: "mailto:mail.dariogeorge@gmail.com",
     icon: Mail,
   },
   {

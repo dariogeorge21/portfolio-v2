@@ -68,7 +68,7 @@ export async function submitContact(input: ContactSubmission): Promise<
     return { ok: false, error: "Captcha verification failed." }
   }
 
-  const to = process.env.CONTACT_TO_EMAIL ?? "edu.dariogeorge21@gmail.com"
+  const to = process.env.CONTACT_TO_EMAIL ?? "mail.dariogeorge@gmail.com"
   const from =
     process.env.CONTACT_FROM_EMAIL ?? "Dario Portfolio <onboarding@resend.dev>"
 
