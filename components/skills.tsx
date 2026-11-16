@@ -1,14 +1,8 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 import {
-  AnimatePresence,
-  LayoutGroup,
-  animate,
   motion,
-  useInView,
-  useMotionValue,
-  useMotionValueEvent,
   useReducedMotion,
   useSpring,
 } from "framer-motion"
@@ -16,8 +10,6 @@ import { skillGroups } from "@/lib/portfolio-data"
 import { SectionHeading } from "./section-heading"
 
 const EASE = [0.22, 1, 0.36, 1] as const
-
-type ViewMode = "chips" | "progress"
 
 type SkillItem = {
   name: string
@@ -31,13 +23,7 @@ type SkillGroup = {
 }
 
 export function Skills() {
-  const [mode, setMode] = useState<ViewMode>("chips")
   const reduceMotion = useReducedMotion()
-
-  useEffect(() => {
-    setMode(Math.random() < 0.5 ? "chips" : "progress")
-  }, [])
-
   const groups = skillGroups as SkillGroup[]
 
   return (
@@ -59,77 +45,29 @@ export function Skills() {
       <div className="relative mx-auto max-w-9xl px-6 md:px-10 items-center">
         <div className="mx-auto max-w-9xl flex items-center justify-center text-center">
           <SectionHeading
-          eyebrow="Capabilities · 03"
-          title={
-            <>
-              A full-stack practice,
-              <br />
-              <span className="italic text-muted">
-                focused on building practical products.
-              </span>
-            </>
-          }
-        />
+            eyebrow="Capabilities · 03"
+            title={
+              <>
+                A full-stack practice,
+                <br />
+                <span className="italic text-muted">
+                  focused on building practical products.
+                </span>
+              </>
+            }
+          />
         </div>
 
-        {/* Mode controls */}
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/4 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.22em] text-white/70 backdrop-blur-md">
-            {mode === "chips" ? "Grouped view" : "Measured view"}
-          </span>
-
-          <div
-            className="inline-flex items-center rounded-full border border-white/10 bg-black/20 p-1 backdrop-blur-md"
-            role="group"
-            aria-label="Switch skill view"
-          >
-            <button
-              type="button"
-              onClick={() => setMode("chips")}
-              aria-pressed={mode === "chips"}
-              className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors duration-300 ${
-                mode === "chips"
-                  ? "bg-cyan-300/18 text-cyan-100"
-                  : "text-white/45 hover:text-white/75"
-              }`}
-            >
-              View 1
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode("progress")}
-              aria-pressed={mode === "progress"}
-              className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] transition-colors duration-300 ${
-                mode === "progress"
-                  ? "bg-cyan-300/18 text-cyan-100"
-                  : "text-white/45 hover:text-white/75"
-              }`}
-            >
-              View 2
-            </button>
-          </div>
-
-          <span className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-            randomly selected on reload
-          </span>
+        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 md:gap-7">
+          {groups.map((group, index) => (
+            <SkillGlassCard
+              key={group.label}
+              group={group}
+              index={index}
+              reduceMotion={reduceMotion ?? false}
+            />
+          ))}
         </div>
-
-        <LayoutGroup id="skills-morph">
-          <motion.div
-            layout
-            className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 md:gap-7"
-          >
-            {groups.map((group, index) => (
-              <SkillGlassCard
-                key={group.label}
-                group={group}
-                index={index}
-                mode={mode}
-                reduceMotion={reduceMotion ?? false}
-              />
-            ))}
-          </motion.div>
-        </LayoutGroup>
 
         <motion.div
           initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
@@ -192,12 +130,10 @@ export function Skills() {
 function SkillGlassCard({
   group,
   index,
-  mode,
   reduceMotion,
 }: {
   group: SkillGroup
   index: number
-  mode: ViewMode
   reduceMotion: boolean
 }) {
   const { ref, motionStyle, onMouseMove, onMouseLeave } = useMagneticTilt(
@@ -258,16 +194,9 @@ function SkillGlassCard({
               <h3 className="text-[15px] font-medium tracking-tight text-white/92 md:text-base">
                 {group.label}
               </h3>
-              <motion.p
-                key={`${group.label}-${mode}-sub`}
-                initial={{ opacity: 0, y: 6, filter: "blur(6px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -6, filter: "blur(6px)" }}
-                transition={{ duration: 0.35, ease: EASE }}
-                className="mt-1 text-[10px] uppercase tracking-[0.2em] text-white/28"
-              >
-                {mode === "chips" ? "Grouped focus areas" : "Measured strength"}
-              </motion.p>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-white/28">
+                Grouped focus areas
+              </p>
             </div>
 
             <div className="flex items-center gap-2">
@@ -292,50 +221,16 @@ function SkillGlassCard({
 
           <div className="my-5 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-          <AnimatePresence mode="wait" initial={false}>
-            {mode === "chips" ? (
-              <motion.div
-                key="chips"
-                initial={{ opacity: 0, y: 12, filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10, filter: "blur(10px)" }}
-                transition={{ duration: 0.35, ease: EASE }}
-                className="flex flex-wrap gap-2.5"
-              >
-                {group.items.map((item, itemIndex) => (
-                  <ChipToken
-                    key={item.name}
-                    name={item.name}
-                    note={item.note}
-                    index={itemIndex}
-                  />
-                ))}
-              </motion.div>
-            ) : (
-              <motion.div
-                key="progress"
-                initial={{ opacity: 0, y: 12, filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10, filter: "blur(10px)" }}
-                transition={{ duration: 0.35, ease: EASE }}
-                className="space-y-3.5"
-              >
-                {group.items.map((item, itemIndex) => (
-                  <ProgressRow
-                    key={`${item.name}-${mode}`}
-                    name={item.name}
-                    level={
-                      typeof item.level === "number"
-                        ? item.level
-                        : Math.max(46, 88 - index * 8 - itemIndex * 5)
-                    }
-                    note={item.note}
-                    delay={index * 0.08 + itemIndex * 0.05}
-                  />
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <div className="flex flex-wrap gap-2.5">
+            {group.items.map((item, itemIndex) => (
+              <ChipToken
+                key={item.name}
+                name={item.name}
+                note={item.note}
+                index={itemIndex}
+              />
+            ))}
+          </div>
         </div>
       </motion.article>
     </div>
@@ -372,82 +267,6 @@ function ChipToken({
         </span>
       ) : null}
     </motion.span>
-  )
-}
-
-function ProgressRow({
-  name,
-  level,
-  note,
-  delay,
-}: {
-  name: string
-  level: number
-  note?: string
-  delay: number
-}) {
-  const rowRef = useRef<HTMLDivElement>(null)
-  const inView = useInView(rowRef, { once: true, margin: "-50px" })
-
-  const count = useMotionValue(0)
-  const [display, setDisplay] = useState(0)
-
-  useMotionValueEvent(count, "change", (latest) => {
-    setDisplay(Math.round(latest))
-  })
-
-  useEffect(() => {
-    if (!inView) return
-
-    const controls = animate(count, level, {
-      duration: 1.1,
-      ease: EASE,
-      delay,
-    })
-
-    return () => controls.stop()
-  }, [inView, level, delay, count])
-
-  return (
-    <motion.div
-      ref={rowRef}
-      layout
-      initial={false}
-      whileHover={{ y: -1 }}
-      transition={{ type: "spring", stiffness: 220, damping: 28 }}
-      className="rounded-2xl border border-white/[0.07] bg-white/[0.035] p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-md"
-    >
-      <div className="flex items-baseline justify-between gap-3">
-        <span className="text-[13px] font-medium tracking-tight text-white/90">
-          {name}
-        </span>
-
-        <span className="font-mono text-[11px] tabular-nums text-white/42">
-          {display}%
-        </span>
-      </div>
-
-      <div className="relative mt-2.5 h-2 overflow-hidden rounded-full bg-black/25 ring-1 ring-white/6">
-        <motion.div
-          initial={{ width: "0%" }}
-          animate={inView ? { width: `${level}%` } : { width: "0%" }}
-          transition={{
-            duration: 1.1,
-            ease: EASE,
-            delay,
-          }}
-          className="relative h-full rounded-full bg-gradient-to-r from-cyan-300/70 via-white/90 to-violet-300/80 shadow-[0_0_18px_rgba(103,232,249,0.35)]"
-        >
-          <span className="absolute inset-y-0 right-0 w-12 bg-gradient-to-r from-transparent to-white/40 blur-sm" />
-        </motion.div>
-      </div>
-
-      {note ? (
-        <p className="mt-2 text-[10px] uppercase tracking-[0.18em] text-white/30">
-          {note}
-        </p>
-      ) : null}
-    </motion.div>
   )
 }
 
