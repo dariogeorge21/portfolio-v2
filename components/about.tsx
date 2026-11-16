@@ -51,7 +51,7 @@ export function About() {
             <div className="relative">
               <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-border-strong/40 bg-surface">
                 <Image
-                  src={details.imageLink || "/darioImg.jpeg"}
+                  src={details.imageLink || "/darioImg.png"}
                   alt={`Portrait of ${details.name}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 40vw"
@@ -83,7 +83,7 @@ export function About() {
                 </div>
               </div>
               {/* Decorative corner accent */}
-              
+
             </div>
             {/* Link to LinkedIn and Github Profile as 2 Cards */}
             <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-5">
@@ -124,7 +124,7 @@ export function About() {
                     className={`absolute inset-0 bg-gradient-to-br ${link.color} opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
                     aria-hidden
                   />
-                  
+
                   {/* Content */}
                   <div className="relative z-10 flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -330,8 +330,8 @@ function Biography() {
           line === "" ? (
             <div key={i} className="h-5" aria-hidden />
           ) : (
-            <motion.div 
-              key={i} 
+            <motion.div
+              key={i}
               className="block overflow-hidden"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

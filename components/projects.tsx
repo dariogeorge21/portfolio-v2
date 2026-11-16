@@ -12,21 +12,9 @@ import {
 import { ArrowUpRight, ArrowRight, Github, Globe, X } from "lucide-react"
 import { useMemo, useState } from "react"
 import { SectionHeading } from "./section-heading"
-import { portfolioProjectList } from "@/lib/portfolio-data"
+import { portfolioProjectList, type Project } from "@/lib/projects-data"
 
-export type Project = {
-  slug: string
-  title: string
-  subtitle: string
-  category: string
-  year: string
-  image: string
-  tags: string[]
-  role: string
-  longDescription: string
-  liveUrl?: string
-  repoUrl?: string
-}
+export type { Project }
 
 const CATEGORIES = ["All", "Product", "Web", "Tooling", "Other"] as const
 const EASE = [0.22, 1, 0.36, 1] as const
@@ -428,7 +416,7 @@ function ProjectCard({
   )
 }
 
-function ProjectModal({
+export function ProjectModal({
   project,
   onClose,
 }: {
@@ -553,6 +541,11 @@ function ProjectModal({
                   <Github size={14} />
                   Repository
                 </a>
+              )}
+              {!project.liveUrl && !project.repoUrl && (
+                <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+                  Internal / Private Project
+                </span>
               )}
             </div>
           </motion.div>

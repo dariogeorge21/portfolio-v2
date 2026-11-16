@@ -1,22 +1,26 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
+import Link from "next/link"
 import { AnimatePresence, motion } from "framer-motion"
 import { Menu, X } from "lucide-react"
 
-const LINKS = [
-  { href: "#top", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#skills", label: "Skills" },
-  { href: "#work", label: "Projects" },
-  { href: "#activity", label: "Activity" },
-  { href: "#contact", label: "Contact" },
+const NAV_ITEMS = [
+  { id: "top", homeHref: "#top", routeHref: "/", label: "Home" },
+  { id: "about", homeHref: "#about", routeHref: "/#about", label: "About" },
+  { id: "skills", homeHref: "#skills", routeHref: "/#skills", label: "Skills" },
+  { id: "work", homeHref: "#work", routeHref: "/projects", label: "Projects" },
+  { id: "activity", homeHref: "#activity", routeHref: "/#activity", label: "Activity" },
+  { id: "contact", homeHref: "#contact", routeHref: "/#contact", label: "Contact" },
 ]
 
 export function Navigation() {
+  const pathname = usePathname()
+  const isHome = pathname === "/"
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
-  const [active, setActive] = useState<string>("#home")
+  const [active, setActive] = useState<string>("top")
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -26,23 +30,33 @@ export function Navigation() {
   }, [])
 
   useEffect(() => {
-    const sections = LINKS.map((l) => document.querySelector(l.href)).filter(
-      Boolean,
-    ) as Element[]
+    if (!isHome) {
+      if (pathname.startsWith("/projects")) {
+        setActive("work")
+      }
+      return
+    }
+
+    const sections = NAV_ITEMS.map((item) =>
+      document.querySelector(item.homeHref),
+    ).filter(Boolean) as Element[]
+
     if (!sections.length) return
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setActive(`#${entry.target.id}`)
+            setActive(entry.target.id)
           }
         }
       },
       { rootMargin: "-40% 0px -55% 0px", threshold: 0 },
     )
+
     sections.forEach((s) => observer.observe(s))
     return () => observer.disconnect()
-  }, [])
+  }, [isHome, pathname])
 
   // Lock scroll when mobile menu open
   useEffect(() => {
@@ -69,72 +83,136 @@ export function Navigation() {
           aria-label="Primary"
           className="mx-auto flex h-16 max-w-9xl items-center justify-between px-6 md:h-20 md:px-10"
         >
-          <a
-            href="#top"
-            className="group flex items-center gap-2.5"
-            aria-label="Dario George — home"
-          >
-            <span
-              aria-hidden
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-border-strong/60 bg-surface transition-colors group-hover:border-neon/60"
+          {isHome ? (
+            <a
+              href="#top"
+              className="group flex items-center gap-2.5"
+              aria-label="Dario George — home"
             >
-              <img src="/darioLogo/dlogo.png" alt="Dlogo" />
-            </span>
-            <span className="hidden font-display text-sm font-medium tracking-tight md:inline">
-              Dario George
-            </span>
-          </a>
+              <span
+                aria-hidden
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-border-strong/60 bg-surface transition-colors group-hover:border-neon/60"
+              >
+                <img src="/darioLogo/dlogo.png" alt="Dlogo" />
+              </span>
+              <span className="hidden font-display text-sm font-medium tracking-tight md:inline">
+                Dario George
+              </span>
+            </a>
+          ) : (
+            <Link
+              href="/"
+              className="group flex items-center gap-2.5"
+              aria-label="Dario George — home"
+            >
+              <span
+                aria-hidden
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-border-strong/60 bg-surface transition-colors group-hover:border-neon/60"
+              >
+                <img src="/darioLogo/dlogo.png" alt="Dlogo" />
+              </span>
+              <span className="hidden font-display text-sm font-medium tracking-tight md:inline">
+                Dario George
+              </span>
+            </Link>
+          )}
 
           {/* Desktop links */}
           <ul className="hidden items-center gap-1 md:flex">
-            {LINKS.map((link) => {
-              const isActive = active === link.href
+            {NAV_ITEMS.map((item) => {
+              const isActive = isHome ? active === item.id : item.id === "work"
+              const href = isHome ? item.homeHref : item.routeHref
+
               return (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="group relative inline-flex h-10 items-center px-4 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    <span className="relative">
-                      {link.label}
-                      <span
-                        aria-hidden
-                        className={[
-                          "absolute -bottom-1 left-0 h-px origin-left bg-neon transition-transform duration-500",
-                          isActive
-                            ? "w-full scale-x-100"
-                            : "w-full scale-x-0 group-hover:scale-x-100",
-                        ].join(" ")}
-                        style={{
-                          boxShadow: isActive
-                            ? "0 0 10px rgba(0,217,255,0.7)"
-                            : undefined,
-                        }}
-                      />
-                    </span>
-                  </a>
+                <li key={item.id}>
+                  {isHome ? (
+                    <a
+                      href={href}
+                      className="group relative inline-flex h-10 items-center px-4 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      <span className="relative">
+                        {item.label}
+                        <span
+                          aria-hidden
+                          className={[
+                            "absolute -bottom-1 left-0 h-px origin-left bg-neon transition-transform duration-500",
+                            isActive
+                              ? "w-full scale-x-100"
+                              : "w-full scale-x-0 group-hover:scale-x-100",
+                          ].join(" ")}
+                          style={{
+                            boxShadow: isActive
+                              ? "0 0 10px rgba(0,217,255,0.7)"
+                              : undefined,
+                          }}
+                        />
+                      </span>
+                    </a>
+                  ) : (
+                    <Link
+                      href={href}
+                      className="group relative inline-flex h-10 items-center px-4 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      <span className="relative">
+                        {item.label}
+                        <span
+                          aria-hidden
+                          className={[
+                            "absolute -bottom-1 left-0 h-px origin-left bg-neon transition-transform duration-500",
+                            isActive
+                              ? "w-full scale-x-100"
+                              : "w-full scale-x-0 group-hover:scale-x-100",
+                          ].join(" ")}
+                          style={{
+                            boxShadow: isActive
+                              ? "0 0 10px rgba(0,217,255,0.7)"
+                              : undefined,
+                          }}
+                        />
+                      </span>
+                    </Link>
+                  )}
                 </li>
               )
             })}
           </ul>
 
           <div className="hidden md:block">
-            <a
-              href="#contact"
-              className="group relative inline-flex h-10 items-center gap-2 overflow-hidden rounded-full border border-border-strong/70 bg-surface/60 px-5 text-sm font-medium text-foreground backdrop-blur transition-all duration-500 hover:border-neon/70"
-            >
-              <span
-                aria-hidden
-                className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-neon/20 to-transparent transition-transform duration-700 group-hover:translate-x-full"
-              />
-              <span className="relative flex items-center gap-2">
-                Let&apos;s talk
+            {isHome ? (
+              <a
+                href="#contact"
+                className="group relative inline-flex h-10 items-center gap-2 overflow-hidden rounded-full border border-border-strong/70 bg-surface/60 px-5 text-sm font-medium text-foreground backdrop-blur transition-all duration-500 hover:border-neon/70"
+              >
                 <span
                   aria-hidden
-                  className="inline-block h-1.5 w-1.5 rounded-full bg-neon animate-neon-pulse"
+                  className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-neon/20 to-transparent transition-transform duration-700 group-hover:translate-x-full"
                 />
-              </span>
-            </a>
+                <span className="relative flex items-center gap-2">
+                  Let&apos;s talk
+                  <span
+                    aria-hidden
+                    className="inline-block h-1.5 w-1.5 rounded-full bg-neon animate-neon-pulse"
+                  />
+                </span>
+              </a>
+            ) : (
+              <Link
+                href="/#contact"
+                className="group relative inline-flex h-10 items-center gap-2 overflow-hidden rounded-full border border-border-strong/70 bg-surface/60 px-5 text-sm font-medium text-foreground backdrop-blur transition-all duration-500 hover:border-neon/70"
+              >
+                <span
+                  aria-hidden
+                  className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-neon/20 to-transparent transition-transform duration-700 group-hover:translate-x-full"
+                />
+                <span className="relative flex items-center gap-2">
+                  Let&apos;s talk
+                  <span
+                    aria-hidden
+                    className="inline-block h-1.5 w-1.5 rounded-full bg-neon animate-neon-pulse"
+                  />
+                </span>
+              </Link>
+            )}
           </div>
 
           {/* Mobile trigger */}
@@ -185,31 +263,50 @@ export function Navigation() {
                 </button>
               </div>
               <ul className="mt-12 flex flex-col gap-1">
-                {LINKS.map((link, i) => (
-                  <motion.li
-                    key={link.href}
-                    initial={{ opacity: 0, x: 24 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{
-                      duration: 0.5,
-                      delay: 0.08 * i + 0.1,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                  >
-                    <a
-                      href={link.href}
-                      onClick={() => setOpen(false)}
-                      className="group flex items-baseline justify-between border-b border-border py-5 text-foreground"
+                {NAV_ITEMS.map((item, i) => {
+                  const href = isHome ? item.homeHref : item.routeHref
+
+                  return (
+                    <motion.li
+                      key={item.id}
+                      initial={{ opacity: 0, x: 24 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        duration: 0.5,
+                        delay: 0.08 * i + 0.1,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
                     >
-                      <span className="font-display text-3xl font-light tracking-tight">
-                        {link.label}
-                      </span>
-                      <span className="font-mono text-xs text-muted">
-                        0{i + 1}
-                      </span>
-                    </a>
-                  </motion.li>
-                ))}
+                      {isHome ? (
+                        <a
+                          href={href}
+                          onClick={() => setOpen(false)}
+                          className="group flex items-baseline justify-between border-b border-border py-5 text-foreground"
+                        >
+                          <span className="font-display text-3xl font-light tracking-tight">
+                            {item.label}
+                          </span>
+                          <span className="font-mono text-xs text-muted">
+                            0{i + 1}
+                          </span>
+                        </a>
+                      ) : (
+                        <Link
+                          href={href}
+                          onClick={() => setOpen(false)}
+                          className="group flex items-baseline justify-between border-b border-border py-5 text-foreground"
+                        >
+                          <span className="font-display text-3xl font-light tracking-tight">
+                            {item.label}
+                          </span>
+                          <span className="font-mono text-xs text-muted">
+                            0{i + 1}
+                          </span>
+                        </Link>
+                      )}
+                    </motion.li>
+                  )
+                })}
               </ul>
               <div className="mt-auto">
                 <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
