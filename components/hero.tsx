@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useScroll, useTransform } from "framer-motion"
-import { ArrowDown, ArrowUpRight, Sparkles } from "lucide-react"
+import { ArrowDown, ArrowUpRight, Coffee } from "lucide-react"
 import { useRef } from "react"
 import { ParticleField } from "./particle-field"
 import { HeroShader } from "./hero-shader"
@@ -184,7 +184,7 @@ export function Hero() {
               className="group inline-flex h-12 items-center gap-2 text-sm text-muted transition-colors hover:text-foreground"
               data-cursor="hover"
             >
-              <Sparkles size={14} className="text-neon" />
+              <Coffee size={14} className="text-neon" />
               <span className="relative">
                 Buy me a coffee
                 <span

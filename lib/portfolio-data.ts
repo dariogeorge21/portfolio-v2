@@ -27,7 +27,7 @@ export const contactContent: { topHead: string; subHead: string } = {
 export const details: Record<string, string> = {
   code: "21DG2026",
   name: "Dario George",
-  location: "New Delhi, India",
+  location: "Palai, Kottayam",
   locationType: "Remote-friendly",
   website: "https://dariogeorge.in",
   role: "Freelance Developer",
