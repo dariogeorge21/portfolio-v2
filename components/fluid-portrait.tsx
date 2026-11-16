@@ -15,9 +15,9 @@ if (typeof window !== "undefined") {
  * Tweakable timing, physics, refraction and optical parameters.
  */
 export const FLUID_CONFIG = {
-  holdDelay: 0.8,         // Seconds to hold full fluid before drain begins
-  drainDuration: 5.5,     // Seconds for the fluid level to drain top to bottom
-  residueDuration: 3.0,   // Seconds for lingering droplets/film to evaporate
+  holdDelay: 3.0,         // Seconds to hold full fluid before drain begins (initial delay)
+  drainDuration: 6.5,     // Seconds for the fluid level to drain top to bottom
+  residueDuration: 3.5,   // Seconds for lingering droplets/film to evaporate
   blurMax: 0.024,         // Max depth blur in UV space (~16px equivalent)
   ior: 1.38,              // Refractive index for water in glass
   tint: [0.0, 0.85, 1.0], // Faint cool cyan attenuation tint (normalized RGB)
@@ -98,7 +98,7 @@ vec2 getCoverUv(vec2 uv, vec2 canvasRes, vec2 imgRes) {
 // 12-tap Poisson/Golden-angle spiral depth blur
 vec4 sampleBlurred(sampler2D tex, vec2 uv, float radius) {
   if (radius <= 0.0006) {
-    return texture2D(tex, vec2(uv.x, 1.0 - uv.y));
+    return texture2D(tex, vec2(uv.x, uv.y));
   }
   vec4 col = vec4(0.0);
   float total = 0.0;
@@ -109,7 +109,7 @@ vec4 sampleBlurred(sampler2D tex, vec2 uv, float radius) {
     vec2 offset = vec2(cos(angle), sin(angle)) * r;
     vec2 sUv = clamp(uv + offset, 0.001, 0.999);
     float weight = 1.0 - (r / max(radius, 0.001)) * 0.45;
-    col += texture2D(tex, vec2(sUv.x, 1.0 - sUv.y)) * weight;
+    col += texture2D(tex, vec2(sUv.x, sUv.y)) * weight;
     total += weight;
   }
   return col / total;
