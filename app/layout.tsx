@@ -58,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${sora.variable} ${geistMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${sora.variable} ${geistMono.variable}`}>
       <head>
         <meta name="apple-mobile-web-app-title" content="Dario" />
       </head>

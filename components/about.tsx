@@ -4,6 +4,7 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { SectionHeading } from "./section-heading"
 import { stats, timeline } from "@/lib/portfolio-data"
+import { useGithubStats } from "@/lib/hooks/use-github-stats"
 import { Linkedin, Github, ArrowUpRight } from "lucide-react"
 import { BADGES } from "@/lib/portfolio-data"
 import { details, lines } from "@/lib/portfolio-data"
@@ -13,6 +14,8 @@ const EASE = [0.22, 1, 0.36, 1] as const
 
 
 export function About() {
+  const githubStats = useGithubStats("dariogeorge21")
+
   return (
     <section
       id="about"
@@ -171,19 +174,27 @@ export function About() {
               transition={{ duration: 0.8, ease: EASE, delay: 0.3 }}
               className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4"
             >
-              {stats.map((s) => (
-                <div
-                  key={s.label}
-                  className="bg-surface p-5"
-                >
-                  <p className="font-display text-3xl font-light tracking-tight text-foreground md:text-4xl">
-                    {s.value}
-                  </p>
-                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.25em] text-muted">
-                    {s.label}
-                  </p>
-                </div>
-              ))}
+              {stats.map((s) => {
+                const isFollowers = s.label.toLowerCase().includes("followers")
+                const displayValue =
+                  isFollowers && typeof githubStats.followers === "number"
+                    ? String(githubStats.followers)
+                    : s.value
+
+                return (
+                  <div
+                    key={s.label}
+                    className="bg-surface p-5"
+                  >
+                    <p className="font-display text-3xl font-light tracking-tight text-foreground md:text-4xl">
+                      {displayValue}
+                    </p>
+                    <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.25em] text-muted">
+                      {s.label}
+                    </p>
+                  </div>
+                )
+              })}
             </motion.div>
 
             {/* GitHub badges */}

@@ -141,7 +141,7 @@ export const timeline: TimelineItem[] = [
 ]
 
 export const stats = [
-  { value: "~58", label: "GitHub Followers" },
+  { value: "75", label: "GitHub Followers" },
   { value: "x2", label: "Quickdraw" },
   { value: "YOLO", label: "Achievement" },
   { value: "New Delhi", label: "Location" },

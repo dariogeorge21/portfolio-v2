@@ -1,33 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { Github } from "lucide-react"
 import { GithubContributions } from "./github-contributions"
+import { useGithubStats } from "@/lib/hooks/use-github-stats"
 
 export function GithubWidget() {
-  const [stats, setStats] = useState({ followers: 57, publicRepos: 25 })
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const res = await fetch("https://api.github.com/users/dariogeorge21")
-        if (!res.ok) throw new Error("Failed")
-        const user = await res.json()
-        setStats({
-          followers: user.followers,
-          publicRepos: user.public_repos,
-        })
-      } catch (e) {
-        // Keep default fallback stats
-        setStats({ followers: 57, publicRepos: 25 })
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchStats()
-  }, [])
+  const stats = useGithubStats("dariogeorge21")
   
   return (
     <div className="rounded-2xl border border-border bg-surface p-6 md:p-8 flex flex-col h-full">
