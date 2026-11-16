@@ -15,9 +15,11 @@ if (typeof window !== "undefined") {
  * Tweakable timing, physics, refraction and optical parameters.
  */
 export const FLUID_CONFIG = {
-  holdDelay: 3.0,         // Seconds to hold full fluid before drain begins (initial delay)
-  drainDuration: 6.5,     // Seconds for the fluid level to drain top to bottom
-  residueDuration: 3.5,   // Seconds for lingering droplets/film to evaporate
+  holdDelay: 5.0,         // Seconds to hold full fluid before drain begins (+2s more delay)
+  drainSlowDuration: 4.0, // Slow smooth drain from top to middle
+  delayInMiddle: 1.2,     // Lingering delay/pause in the middle
+  drainFastDuration: 2.2, // Faster drain from middle to end
+  residueDuration: 3.2,   // Evaporation of clinging droplets
   blurMax: 0.024,         // Max depth blur in UV space (~16px equivalent)
   ior: 1.38,              // Refractive index for water in glass
   tint: [0.0, 0.85, 1.0], // Faint cool cyan attenuation tint (normalized RGB)
@@ -39,6 +41,7 @@ uniform sampler2D uTexture;
 uniform vec2 uResolution;
 uniform vec2 uImageResolution;
 uniform float uTime;
+uniform float uParticleTime;
 uniform float uFluidLevel;
 uniform float uResidueLevel;
 uniform float uResidueAlpha;
@@ -161,8 +164,8 @@ void main() {
   float residueBlur = 0.0;
 
   if (!isUnderFluid && uv.y <= uResidueLevel && uResidueAlpha > 0.005) {
-    float dropletNoise = snoise(uv * 46.0 + vec2(0.0, -uTime * 0.08));
-    float streakNoise = snoise(vec2(uv.x * 62.0, uv.y * 12.0 - uTime * 0.18));
+    float dropletNoise = snoise(uv * 46.0 + vec2(0.0, -uParticleTime * 0.08));
+    float streakNoise = snoise(vec2(uv.x * 62.0, uv.y * 12.0 - uParticleTime * 0.18));
     
     float drops = smoothstep(0.66, 0.84, dropletNoise);
     float streaks = smoothstep(0.70, 0.88, streakNoise) * 0.5;
@@ -205,14 +208,14 @@ void main() {
     float caustic = pow(snoise(uv * 18.0 + uTime * 0.6) * 0.5 + 0.5, 3.2) * 0.075 * depth;
     finalColor += vec3(caustic);
 
-    // Micro-bubbles rising slowly inside fluid
-    for (int i = 0; i < 3; i++) {
+    // Micro-bubbles rising slowly inside fluid (stay stationary for first 2-3s, then move)
+    for (int i = 0; i < 4; i++) {
       float fi = float(i);
-      float bx = fract(0.24 + fi * 0.33 + sin(uTime * 0.2 + fi) * 0.035);
-      float by = fract(0.12 + fi * 0.34 + uTime * (0.035 + fi * 0.014));
+      float bx = fract(0.24 + fi * 0.28 + sin(uParticleTime * 0.2 + fi) * 0.035);
+      float by = fract(0.12 + fi * 0.26 + uParticleTime * (0.042 + fi * 0.014));
       if (by < meniscusY) {
         float bDist = length((uv - vec2(bx, by)) * vec2(1.0, uResolution.y / uResolution.x));
-        float bubble = smoothstep(0.009, 0.004, bDist) * 0.20;
+        float bubble = smoothstep(0.009, 0.004, bDist) * 0.22;
         finalColor += vec3(bubble);
       }
     }
@@ -332,6 +335,7 @@ export function FluidPortrait({
       uResolution: { value: new THREE.Vector2(1, 1) },
       uImageResolution: { value: new THREE.Vector2(4, 5) },
       uTime: { value: 0 },
+      uParticleTime: { value: 0 },
       uFluidLevel: { value: 1.0 },       // Starts 100% full
       uResidueLevel: { value: 1.0 },
       uResidueAlpha: { value: 1.0 },
@@ -431,29 +435,74 @@ export function FluidPortrait({
         })
         const tl = activeTl
 
-        // 1. Drain fluid from 1.0 down to -0.05
+        const t1 = FLUID_CONFIG.drainSlowDuration   // 4.0s (start to middle smooth slow)
+        const t2 = FLUID_CONFIG.delayInMiddle       // 1.2s (little delay in the middle)
+        const t3 = FLUID_CONFIG.drainFastDuration   // 2.2s (middle to end faster than earlier)
+        const totalDrain = t1 + t2 + t3             // 7.4s total drain time
+
+        // 1. Stage 1: Starting to middle smooth and slow (1.0 -> 0.52)
         tl.to(
           uniforms.uFluidLevel,
           {
-            value: -0.05,
-            duration: FLUID_CONFIG.drainDuration,
-            ease: "power2.inOut",
+            value: 0.52,
+            duration: t1,
+            ease: "sine.out",
           },
           0
         )
 
-        // 2. Residue level trails slightly behind
+        // Stage 2: Little delay in the middle (0.52 -> 0.48 gentle wavering pause)
+        tl.to(
+          uniforms.uFluidLevel,
+          {
+            value: 0.48,
+            duration: t2,
+            ease: "sine.inOut",
+          },
+          t1
+        )
+
+        // Stage 3: Middle to end faster than earlier (0.48 -> -0.05)
+        tl.to(
+          uniforms.uFluidLevel,
+          {
+            value: -0.05,
+            duration: t3,
+            ease: "power2.in",
+          },
+          t1 + t2
+        )
+
+        // 2. Residue level trails slightly behind each stage
+        tl.to(
+          uniforms.uResidueLevel,
+          {
+            value: 0.52,
+            duration: t1,
+            ease: "sine.out",
+          },
+          0.3
+        )
+        tl.to(
+          uniforms.uResidueLevel,
+          {
+            value: 0.48,
+            duration: t2,
+            ease: "sine.inOut",
+          },
+          t1 + 0.3
+        )
         tl.to(
           uniforms.uResidueLevel,
           {
             value: -0.05,
-            duration: FLUID_CONFIG.drainDuration + 0.6,
-            ease: "power2.inOut",
+            duration: t3 + 0.4,
+            ease: "power2.in",
           },
-          0.3
+          t1 + t2 + 0.3
         )
 
-        // 3. Card soft 3D perspective tilt near the end
+        // 3. Card soft 3D perspective tilt near the faster end of draining
         if (cardRef?.current) {
           tl.to(
             cardRef.current,
@@ -465,11 +514,11 @@ export function FluidPortrait({
               yoyo: true,
               repeat: 1,
             },
-            FLUID_CONFIG.drainDuration - 1.6
+            totalDrain - 1.6
           )
         }
 
-        // 4. Spill trigger near bottom edge
+        // 4. Spill trigger as fluid rushes through the bottom edge
         tl.add(() => {
           isSpillActive = true
           gsap.to(
@@ -484,9 +533,9 @@ export function FluidPortrait({
               },
             }
           )
-        }, FLUID_CONFIG.drainDuration - 1.4)
+        }, totalDrain - 1.4)
 
-        // 5. Evaporate residue droplets to fully clear
+        // 5. Evaporate residue droplets to fully clear after drain completes
         tl.to(
           uniforms.uResidueAlpha,
           {
@@ -494,15 +543,15 @@ export function FluidPortrait({
             duration: FLUID_CONFIG.residueDuration,
             ease: "power2.inOut",
           },
-          FLUID_CONFIG.drainDuration + 0.5
+          totalDrain + 0.4
         )
 
-        // 6. Light sweep beam across glass
+        // 6. Light sweep beam across glass during drain
         tl.to(
           uniforms.uLightSweep,
           {
             value: 1.0,
-            duration: 3.5,
+            duration: 4.8,
             ease: "power1.inOut",
           },
           0.6
@@ -514,12 +563,13 @@ export function FluidPortrait({
           if (renderer.domElement) {
             renderer.domElement.style.opacity = "0"
           }
-        }, "+=0.4")
+        }, totalDrain + FLUID_CONFIG.residueDuration + 0.4)
       },
     })
 
     // Animation Loop with Visibility Pause
     let isVisible = true
+    let viewStartTime = -1
     let animationId = 0
     const clock = new THREE.Clock()
 
@@ -527,6 +577,9 @@ export function FluidPortrait({
       (entries) => {
         for (const entry of entries) {
           isVisible = entry.isIntersecting
+          if (isVisible && viewStartTime < 0) {
+            viewStartTime = clock.getElapsedTime()
+          }
         }
       },
       { threshold: 0.05 }
@@ -540,6 +593,15 @@ export function FluidPortrait({
 
       const elapsedTime = clock.getElapsedTime()
       uniforms.uTime.value = elapsedTime
+
+      if (viewStartTime < 0 && isVisible) {
+        viewStartTime = elapsedTime
+      }
+      const timeInView = Math.max(0, elapsedTime - (viewStartTime >= 0 ? viewStartTime : 0))
+
+      // The particles stay motionless for 2.8 seconds (~2-3s), then begin floating and drifting
+      const particleTime = Math.max(0.0, timeInView - 2.8)
+      uniforms.uParticleTime.value = particleTime
 
       // Smooth motion damping
       currentMotion += (targetMotion - currentMotion) * 0.08
