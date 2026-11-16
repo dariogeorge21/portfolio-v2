@@ -18,29 +18,7 @@ const CACHE_KEY = "dg_github_stats_cache"
 const CACHE_TTL_MS = 1000 * 60 * 15 // 15 minutes
 
 export function useGithubStats(username: string = "dariogeorge21") {
-  const [stats, setStats] = useState<GithubStats>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const cached = sessionStorage.getItem(`${CACHE_KEY}_${username}`)
-        if (cached) {
-          const parsed = JSON.parse(cached)
-          if (
-            Date.now() - parsed.timestamp < CACHE_TTL_MS &&
-            typeof parsed.followers === "number"
-          ) {
-            return {
-              followers: parsed.followers,
-              publicRepos: parsed.publicRepos ?? FALLBACK_STATS.publicRepos,
-              isLoading: false,
-            }
-          }
-        }
-      } catch {
-        // Ignore sessionStorage errors
-      }
-    }
-    return { ...FALLBACK_STATS }
-  })
+  const [stats, setStats] = useState<GithubStats>(FALLBACK_STATS)
 
   useEffect(() => {
     let isMounted = true
