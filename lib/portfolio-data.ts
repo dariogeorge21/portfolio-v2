@@ -133,11 +133,18 @@ export const timeline: TimelineItem[] = [
     side: "left",
   },
   {
+    year: "June 2026",
+    title: "Full Stack Intern",
+    org: "Clavis Technologies · Noida, Uttar Pradesh",
+    description: "Completed a 1-month intensive internship developing and maintaining full-stack web solutions, contributing to frontend architectures and backend services.",
+    side: "right",
+  },
+  {
     year: "2024 - Present",
     title: "Hackathon Competitor & Builder",
     org: "National & Collegiate",
     description: "Participated in 6+ national and collegiate hackathons, rapidly architecting and shipping scalable full-stack products under competitive timeframes.",
-    side: "right",
+    side: "left",
   },
 ]
 
