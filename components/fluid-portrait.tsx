@@ -15,11 +15,11 @@ if (typeof window !== "undefined") {
  * Tweakable timing, physics, refraction and optical parameters.
  */
 export const FLUID_CONFIG = {
-  holdDelay: 5.0,         // Seconds to hold full fluid before drain begins (+2s more delay)
-  drainSlowDuration: 4.0, // Slow smooth drain from top to middle
-  delayInMiddle: 1.2,     // Lingering delay/pause in the middle
+  holdDelay: 1.5,         // Seconds to hold full fluid before drain begins (+2s more delay)
+  drainSlowDuration: 2.5, // Slow smooth drain from top to middle
+  delayInMiddle: 0.8,     // Lingering delay/pause in the middle
   drainFastDuration: 2.2, // Faster drain from middle to end
-  residueDuration: 3.2,   // Evaporation of clinging droplets
+  residueDuration: 2.2,   // Evaporation of clinging droplets
   blurMax: 0.024,         // Max depth blur in UV space (~16px equivalent)
   ior: 1.38,              // Refractive index for water in glass
   tint: [0.0, 0.85, 1.0], // Faint cool cyan attenuation tint (normalized RGB)
@@ -685,9 +685,8 @@ export function FluidPortrait({
   if (!hasWebGL) {
     return (
       <div
-        className={`pointer-events-none absolute inset-0 z-10 transition-all duration-1000 ${
-          isDrained ? "opacity-0" : "opacity-100 backdrop-blur-md"
-        } ${className}`}
+        className={`pointer-events-none absolute inset-0 z-10 transition-all duration-1000 ${isDrained ? "opacity-0" : "opacity-100 backdrop-blur-md"
+          } ${className}`}
       />
     )
   }
@@ -712,9 +711,8 @@ export function FluidPortrait({
       {/* Three.js Fluid WebGL Container */}
       <div
         ref={containerRef}
-        className={`pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-[inherit] transition-opacity duration-700 ${
-          isDrained ? "opacity-0" : "opacity-100"
-        } ${className}`}
+        className={`pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-[inherit] transition-opacity duration-700 ${isDrained ? "opacity-0" : "opacity-100"
+          } ${className}`}
         aria-hidden
       />
 
