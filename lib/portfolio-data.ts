@@ -129,6 +129,7 @@ export type EducationItem = {
   period: string
   description: string
   achievements: string[]
+  mapUrl?: string
 }
 
 export const timeline: TimelineItem[] = [

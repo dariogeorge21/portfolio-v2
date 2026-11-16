@@ -3,24 +3,34 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { SectionHeading } from "./section-heading"
-import { education } from "@/lib/portfolio-data"
-import { ArrowUpRight } from "lucide-react"
+import { education, type EducationItem } from "@/lib/portfolio-data"
+import { ArrowUpRight, MapPin } from "lucide-react"
 
 // Ultra-smooth custom easing for cinematic motion
 const EASE = [0.16, 1, 0.3, 1] as const
 
-function EducationRow({ edu, index }: { edu: any; index: number }) {
+function EducationRow({ edu, index }: { edu: EducationItem; index: number }) {
   const [isHovered, setIsHovered] = useState(false)
+  const mapSearchUrl =
+    edu.mapUrl ||
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      `${edu.institution}, ${edu.location}`
+    )}`
 
   return (
-    <motion.div
+    <motion.a
+      href={mapSearchUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Open ${edu.institution} (${edu.location}) in Google Maps`}
+      title={`Open ${edu.institution} in Google Maps`}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.8, ease: EASE, delay: index * 0.1 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative border-b border-white/10 py-10 transition-colors duration-500 first:border-t hover:border-white/30 md:py-14"
+      className="group relative block border-b border-white/10 py-10 transition-colors duration-500 first:border-t hover:border-white/30 md:py-14 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neon"
     >
       {/* Subtle background bloom on hover - Awwwards staple */}
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-neon/[0.03] via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
@@ -39,14 +49,14 @@ function EducationRow({ edu, index }: { edu: any; index: number }) {
           <motion.div
             animate={{ x: isHovered ? 16 : 0 }}
             transition={{ duration: 0.6, ease: EASE }}
-            className="flex items-start justify-between md:items-center"
+            className="flex items-start justify-between gap-4 md:items-center"
           >
             <h3 className="font-display text-3xl font-medium tracking-tight text-white transition-colors duration-500 md:text-4xl lg:text-5xl group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/50">
               {edu.degree}
             </h3>
             
-            {/* Interactive Arrow Indicator */}
-            <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-all duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:border-neon/30 group-hover:bg-neon/10 md:flex">
+            {/* Interactive Arrow Indicator with Map hint */}
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-all duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:border-neon/30 group-hover:bg-neon/10">
               <ArrowUpRight className="text-white/40 transition-colors duration-500 group-hover:text-neon" size={20} />
             </div>
           </motion.div>
@@ -57,9 +67,12 @@ function EducationRow({ edu, index }: { edu: any; index: number }) {
             transition={{ duration: 0.6, ease: EASE, delay: 0.02 }}
             className="mt-4 flex flex-wrap items-center gap-2 text-base md:text-lg text-white/50"
           >
-            <span className="font-medium text-white/80">{edu.institution}</span>
-            <span className="hidden text-white/20 md:inline-block">—</span>
-            <span className="text-sm tracking-wide md:text-base">{edu.location}</span>
+            <span className="font-medium text-white/80 transition-colors duration-300 group-hover:text-white">{edu.institution}</span>
+            <span className="text-white/20">—</span>
+            <span className="inline-flex items-center gap-1.5 text-sm tracking-wide text-white/60 transition-colors duration-300 group-hover:text-neon md:text-base">
+              <MapPin className="h-4 w-4 shrink-0 text-neon/70" />
+              {edu.location}
+            </span>
           </motion.div>
 
           {/* Description */}
@@ -93,7 +106,7 @@ function EducationRow({ edu, index }: { edu: any; index: number }) {
           )}
         </div>
       </div>
-    </motion.div>
+    </motion.a>
   )
 }
 
