@@ -14,15 +14,16 @@ export async function GET() {
     })
 
     if (!res.ok) {
-      return NextResponse.json({ followers: 75, publicRepos: 177 }, { status: 200 })
+      return NextResponse.json({ followers: 75, publicRepos: 190 }, { status: 200 })
     }
 
     const data = await res.json()
+    const repos = typeof data.public_repos === "number" ? Math.max(data.public_repos, 190) : 190
     return NextResponse.json({
       followers: typeof data.followers === "number" ? data.followers : 75,
-      publicRepos: typeof data.public_repos === "number" ? data.public_repos : 177,
+      publicRepos: repos,
     })
   } catch {
-    return NextResponse.json({ followers: 75, publicRepos: 177 }, { status: 200 })
+    return NextResponse.json({ followers: 75, publicRepos: 190 }, { status: 200 })
   }
 }

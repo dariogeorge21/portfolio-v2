@@ -6,7 +6,6 @@ import { SectionHeading } from "./section-heading"
 import { stats, timeline } from "@/lib/portfolio-data"
 import { useGithubStats } from "@/lib/hooks/use-github-stats"
 import { Linkedin, Github, ArrowUpRight } from "lucide-react"
-import { BADGES } from "@/lib/portfolio-data"
 import { details, lines } from "@/lib/portfolio-data"
 
 const EASE = [0.22, 1, 0.36, 1] as const
@@ -176,10 +175,17 @@ export function About() {
             >
               {stats.map((s) => {
                 const isFollowers = s.label.toLowerCase().includes("followers")
-                const displayValue =
-                  isFollowers && typeof githubStats.followers === "number"
-                    ? String(githubStats.followers)
-                    : s.value
+                const isRepos = s.label.toLowerCase().includes("repositories")
+                let displayValue = s.value
+
+                if (isFollowers && typeof githubStats.followers === "number") {
+                  displayValue = String(githubStats.followers)
+                } else if (isRepos && typeof githubStats.publicRepos === "number") {
+                  displayValue =
+                    githubStats.publicRepos > 190
+                      ? `${githubStats.publicRepos}+`
+                      : "190+"
+                }
 
                 return (
                   <div
@@ -196,43 +202,6 @@ export function About() {
                 )
               })}
             </motion.div>
-
-            {/* GitHub badges */}
-            <div className="mt-10">
-              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
-                GitHub · achievements
-              </p>
-              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                {BADGES.map((b, i) => (
-                  <motion.div
-                    key={b.label}
-                    initial={{ opacity: 0, scale: 0.85, y: 10 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-60px" }}
-                    transition={{
-                      duration: 0.6,
-                      ease: EASE,
-                      delay: 0.1 * i,
-                      type: "spring",
-                      stiffness: 220,
-                      damping: 18,
-                    }}
-                    className="group rounded-xl border border-border bg-surface p-4 transition-colors hover:border-neon/40"
-                  >
-                    <b.icon
-                      size={18}
-                      className="text-neon transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <p className="mt-3 text-sm font-medium text-foreground">
-                      {b.label}
-                    </p>
-                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
-                      {b.sub}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
 

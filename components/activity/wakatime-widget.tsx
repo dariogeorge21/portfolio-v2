@@ -40,7 +40,10 @@ export async function WakatimeWidget() {
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <Activity className="text-neon" size={24} />
-          <h3 className="font-display text-xl tracking-tight">Weekly Activity</h3>
+          <div>
+            <h3 className="font-display text-xl tracking-tight">Coding Activity</h3>
+            <p className="text-[11px] font-mono text-muted">860+ hrs since May 18, 2025</p>
+          </div>
         </div>
         <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted bg-surface-2 border border-border px-3 py-1.5 rounded-full">
           {totalTime}
@@ -63,7 +66,7 @@ export async function WakatimeWidget() {
           </div>
         ))}
       </div>
-      <p className="mt-8 text-xs text-muted text-center">Data powered by WakaTime</p>
+      <p className="mt-8 text-xs text-muted text-center">860+ total hours logged · Powered by WakaTime</p>
     </div>
   )
 }

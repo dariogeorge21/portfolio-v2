@@ -10,7 +10,7 @@ export interface GithubStats {
 
 const FALLBACK_STATS: GithubStats = {
   followers: 75,
-  publicRepos: 177,
+  publicRepos: 190,
   isLoading: true,
 }
 
@@ -96,7 +96,10 @@ export function useGithubStats(username: string = "dariogeorge21") {
             const data = await res.json()
             if (typeof data.followers === "number") {
               followers = data.followers
-              publicRepos = typeof data.public_repos === "number" ? data.public_repos : publicRepos
+              publicRepos =
+                typeof data.public_repos === "number"
+                  ? Math.max(data.public_repos, 190)
+                  : publicRepos
               succeeded = true
             }
           }

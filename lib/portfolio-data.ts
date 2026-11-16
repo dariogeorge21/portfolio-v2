@@ -1,4 +1,4 @@
-import { Code2, GitBranch, Award, Code, Instagram, Twitter, Linkedin, Github, Mail } from "lucide-react"
+import { Code, Instagram, Twitter, Linkedin, Github, Mail } from "lucide-react"
 
 export {
   type Project,
@@ -7,12 +7,6 @@ export {
   portfolioProjectList,
   projects,
 } from "./projects-data"
-
-export const BADGES: { icon: React.ComponentType<{ size?: number; className?: string }>; label: string; sub: string }[] = [
-  { icon: Award, label: "Pro Contributor", sub: "500+ commits" },
-  { icon: GitBranch, label: "Open Source", sub: "3k★ maintainer" },
-  { icon: Code2, label: "Pair Extraordinaire", sub: "Team-first" },
-]
 
 export const lines: string[] = [
   "I am an enthusiastic developer who thrives on building",
@@ -133,18 +127,29 @@ export type EducationItem = {
 export const timeline: TimelineItem[] = [
   {
     year: "Current",
-    title: "Freelance Developer",
-    org: "Remote",
-    description: "Building web applications and tools for clients across various industries, focusing on clean design and robust functionality.",
+    title: "Freelance Web Developer & Consultant",
+    org: "Pan-India",
+    description: "Delivering modern web applications, performant tools, and tailored digital solutions, with 15+ services shipped to clients across India.",
     side: "left",
+  },
+  {
+    year: "2024 - Present",
+    title: "Hackathon Competitor & Builder",
+    org: "National & Collegiate",
+    description: "Participated in 6+ national and collegiate hackathons, rapidly architecting and shipping scalable full-stack products under competitive timeframes.",
+    side: "right",
   },
 ]
 
 export const stats = [
+  { value: "4,000+", label: "Commits (2026)" },
+  { value: "190+", label: "Repositories" },
   { value: "75", label: "GitHub Followers" },
-  { value: "x2", label: "Quickdraw" },
-  { value: "YOLO", label: "Achievement" },
-  { value: "New Delhi", label: "Location" },
+  { value: "860+ hrs", label: "WakaTime Coding" },
+  { value: "4,500+", label: "GitHub Views" },
+  { value: "700+", label: "LinkedIn Network" },
+  { value: "20+", label: "Projects Built" },
+  { value: "15+", label: "Client Deliveries" },
 ]
 
 export const education: EducationItem[] = [
