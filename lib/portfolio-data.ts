@@ -174,7 +174,7 @@ export const education: EducationItem[] = [
     period: "2024 - Present",
     description: "Currently in the second semester (S4) of Computer Science and Engineering program, focusing on building a strong foundation in programming, data structures, and algorithms.",
     achievements: [
-      "Current GPA: 8.5",
+      "Current GPA: 8.0",
       "Actively learning web development technologies",
       "Exploring Data Structures and Algorithms in C++",
     ],
