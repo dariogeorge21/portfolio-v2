@@ -82,6 +82,8 @@ export const skillGroups: SkillGroup[] = [
     items: [
       { name: "Next.js", level: 90 },
       { name: "React", level: 92 },
+      { name: "NestJS", level: 88, note: "Backend architecture" },
+      { name: "Vite", level: 90, note: "Fast build tooling" },
       { name: "Node.js", level: 85 },
       { name: "Tailwind CSS", level: 95 },
       { name: "HTML5/CSS3", level: 95 },
@@ -90,19 +92,24 @@ export const skillGroups: SkillGroup[] = [
   {
     label: "Databases & Backend",
     items: [
-      { name: "MongoDB", level: 88 },
+      { name: "Postgres", level: 90, note: "Relational core" },
+      { name: "MongoDB", level: 88, note: "Document store" },
+      { name: "Redis", level: 85, note: "Caching & memory" },
       { name: "MySQL", level: 85 },
-      { name: "Supabase", level: 80 },
+      { name: "Supabase", level: 82 },
       { name: "Firebase", level: 82 },
     ],
   },
   {
     label: "Tools & DevOps",
     items: [
+      { name: "Docker", level: 88, note: "Containerization" },
+      { name: "Caddy", level: 85, note: "Reverse proxy & TLS" },
+      { name: "Ollama", level: 86, note: "Local AI & LLMs" },
+      { name: "Vercel", level: 92, note: "Deployments" },
       { name: "Git / GitHub", level: 90 },
       { name: "Linux / Arch", level: 88, note: "Daily environment" },
       { name: "Bash / PowerShell", level: 85 },
-      { name: "Vercel / Netlify", level: 90 },
     ],
   },
 ]

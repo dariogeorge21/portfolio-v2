@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { ArrowDown, ArrowUpRight, Sparkles } from "lucide-react"
 import { useRef } from "react"
 import { ParticleField } from "./particle-field"
+import { HeroShader } from "./hero-shader"
 import { HeadlineDetails } from "@/lib/portfolio-data"
 import { details } from "@/lib/portfolio-data"
 import Head from "next/head"
@@ -35,15 +36,17 @@ export function Hero() {
         className="absolute inset-0 -z-10"
         aria-hidden
       >
+        {/* Dark Fluid WebGL Shader */}
+        <HeroShader className="opacity-90" />
         {/* Base grid */}
-        <div className="absolute inset-0 bg-grid bg-grid-fade opacity-70" />
-        {/* Orbs */}
-        <div className="absolute -left-40 top-1/3 h-[520px] w-[520px] rounded-full bg-neon/10 blur-[120px] animate-drift-slow" />
-        <div className="absolute -right-24 top-10 h-[380px] w-[380px] rounded-full bg-[#4d7cff]/10 blur-[100px] animate-drift" />
+        <div className="absolute inset-0 bg-grid bg-grid-fade opacity-40" />
+        {/* Ambient atmospheric orbs */}
+        <div className="absolute -left-40 top-1/3 h-[520px] w-[520px] rounded-full bg-neon/8 blur-[130px] animate-drift-slow" />
+        <div className="absolute -right-24 top-10 h-[380px] w-[380px] rounded-full bg-[#4d7cff]/8 blur-[110px] animate-drift" />
         {/* Particle field */}
-        <ParticleField className="absolute inset-0 h-full w-full" />
+        <ParticleField className="absolute inset-0 h-full w-full opacity-80" />
         {/* Vignette */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(5,7,13,0.4)_60%,rgba(5,7,13,1)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(5,7,13,0.3)_55%,rgba(5,7,13,0.95)_100%)]" />
         {/* Bottom gradient */}
         <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent to-background" />
       </motion.div>
