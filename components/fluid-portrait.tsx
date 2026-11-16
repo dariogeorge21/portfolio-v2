@@ -20,10 +20,10 @@ export const FLUID_CONFIG = {
   delayInMiddle: 0.8,     // Lingering delay/pause in the middle
   drainFastDuration: 2.2, // Faster drain from middle to end
   residueDuration: 2.2,   // Evaporation of clinging droplets
-  blurMax: 0.024,         // Max depth blur in UV space (~16px equivalent)
-  ior: 1.38,              // Refractive index for water in glass
+  blurMax: 0.072,         // Max depth blur in UV space (heavily frosted ~50px equivalent)
+  ior: 1.42,              // Refractive index for water in glass
   tint: [0.0, 0.85, 1.0], // Faint cool cyan attenuation tint (normalized RGB)
-  waveAmp: 0.018,         // Meniscus wave undulation amplitude
+  waveAmp: 0.020,         // Meniscus wave undulation amplitude
 }
 
 const VERTEX_SHADER = `
@@ -98,20 +98,21 @@ vec2 getCoverUv(vec2 uv, vec2 canvasRes, vec2 imgRes) {
   return clamp(nUv, 0.0, 1.0);
 }
 
-// 12-tap Poisson/Golden-angle spiral depth blur
+// 24-tap Golden-angle Fermat spiral depth blur
 vec4 sampleBlurred(sampler2D tex, vec2 uv, float radius) {
   if (radius <= 0.0006) {
     return texture2D(tex, vec2(uv.x, uv.y));
   }
   vec4 col = vec4(0.0);
   float total = 0.0;
-  const int TAPS = 12;
+  const int TAPS = 24;
   for (int i = 0; i < TAPS; i++) {
-    float angle = float(i) * 2.39996323; // Golden angle
-    float r = sqrt(float(i + 1) / float(TAPS)) * radius;
+    float fi = float(i);
+    float angle = fi * 2.39996323; // Golden angle (phi)
+    float r = sqrt((fi + 0.5) / float(TAPS)) * radius;
     vec2 offset = vec2(cos(angle), sin(angle)) * r;
     vec2 sUv = clamp(uv + offset, 0.001, 0.999);
-    float weight = 1.0 - (r / max(radius, 0.001)) * 0.45;
+    float weight = 1.0 - (r / max(radius, 0.001)) * 0.42;
     col += texture2D(tex, vec2(sUv.x, sUv.y)) * weight;
     total += weight;
   }
@@ -143,20 +144,25 @@ void main() {
   bool isUnderFluid = uv.y < meniscusY;
   float distToMeniscus = abs(uv.y - meniscusY);
 
-  // --- Fluid Refraction & Motion ---
+  // --- Fluid Refraction & Motion (multi-octave flow) ---
   float noiseSpeed = 0.32 + uMotion * 0.9;
-  vec2 noiseCoord = uv * 5.0 + vec2(0.0, uTime * noiseSpeed);
+  vec2 noiseCoord = uv * 4.5 + vec2(0.0, uTime * noiseSpeed);
   vec2 flow = vec2(
     snoise(noiseCoord),
     snoise(noiseCoord + vec2(43.7, 19.3))
   );
+  vec2 flowDetail = vec2(
+    snoise(noiseCoord * 2.2 + vec2(12.3, 45.6)),
+    snoise(noiseCoord * 2.2 + vec2(78.9, 12.1))
+  );
+  vec2 combinedFlow = flow * 0.72 + flowDetail * 0.38;
 
-  float refrStrength = (0.015 + uMotion * 0.022) * (uIor - 1.0) / 0.38;
-  vec2 fluidDisplacement = flow * refrStrength;
+  float refrStrength = (0.026 + uMotion * 0.032) * (uIor - 1.0) / 0.38;
+  vec2 fluidDisplacement = combinedFlow * refrStrength;
 
-  // Depth-aware blur
+  // Depth-aware blur: high baseline across whole submerged area
   float depth = clamp((meniscusY - uv.y) / 0.35, 0.0, 1.0);
-  float blurRadius = isUnderFluid ? (uBlurMax * (0.25 + 0.75 * depth)) : 0.0;
+  float blurRadius = isUnderFluid ? (uBlurMax * (0.85 + 0.15 * depth)) : 0.0;
 
   // --- Lingering Wet Residue / Film Above Meniscus ---
   float residueMask = 0.0;
@@ -200,9 +206,13 @@ void main() {
     finalAlpha = 1.0;
 
     // Translucent cool cyan fluid tint & attenuation
-    vec3 fluidTint = mix(vec3(1.0), uTint, 0.14 + depth * 0.12);
+    vec3 fluidTint = mix(vec3(1.0), uTint, 0.22 + depth * 0.16);
     finalColor *= fluidTint;
-    finalColor += uTint * (0.018 + depth * 0.032);
+
+    // Frosted liquid glass internal diffuse scattering
+    vec3 scatterTint = mix(vec3(0.04, 0.10, 0.16), uTint, 0.22);
+    finalColor = mix(finalColor, scatterTint, 0.26 + depth * 0.14);
+    finalColor += uTint * (0.024 + depth * 0.034);
 
     // Caustic shimmer
     float caustic = pow(snoise(uv * 18.0 + uTime * 0.6) * 0.5 + 0.5, 3.2) * 0.075 * depth;
@@ -685,7 +695,7 @@ export function FluidPortrait({
   if (!hasWebGL) {
     return (
       <div
-        className={`pointer-events-none absolute inset-0 z-10 transition-all duration-1000 ${isDrained ? "opacity-0" : "opacity-100 backdrop-blur-md"
+        className={`pointer-events-none absolute inset-0 z-10 transition-all duration-1000 ${isDrained ? "opacity-0" : "opacity-100 backdrop-blur-2xl bg-surface/30"
           } ${className}`}
       />
     )
