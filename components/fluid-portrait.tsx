@@ -246,6 +246,21 @@ void main() {
 }
 `
 
+function isWebGLSupported(): boolean {
+  if (typeof window === "undefined") return false
+  try {
+    const testCanvas = document.createElement("canvas")
+    return !!(
+      window.WebGLRenderingContext &&
+      (testCanvas.getContext("webgl2") ||
+        testCanvas.getContext("webgl") ||
+        testCanvas.getContext("experimental-webgl"))
+    )
+  } catch {
+    return false
+  }
+}
+
 interface FluidPortraitProps {
   imageSrc: string
   className?: string
@@ -258,7 +273,6 @@ export function FluidPortrait({
   cardRef,
 }: FluidPortraitProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
   const spillCanvasRef = useRef<HTMLCanvasElement>(null)
 
   const [hasWebGL, setHasWebGL] = useState(true)
@@ -278,34 +292,36 @@ export function FluidPortrait({
       return
     }
 
-    const container = containerRef.current
-    const canvas = canvasRef.current
-    if (!container || !canvas) return
-
-    // 2. WebGL support test
-    let glTest: WebGLRenderingContext | null = null
-    try {
-      glTest =
-        canvas.getContext("webgl") ||
-        (canvas.getContext("experimental-webgl") as WebGLRenderingContext | null)
-    } catch {
-      glTest = null
-    }
-
-    if (!glTest) {
+    // 2. Safe WebGL support check (using throwaway test canvas)
+    if (!isWebGLSupported()) {
       setHasWebGL(false)
       return
     }
 
-    // 3. Three.js Scene Setup
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      alpha: true,
-      antialias: true,
-      powerPreference: "high-performance",
-    })
+    const container = containerRef.current
+    if (!container) return
+
+    // Clean container in case of Fast Refresh / StrictMode re-mount
+    container.innerHTML = ""
+
+    // 3. Three.js Scene Setup with clean WebGLRenderer-managed canvas
+    let renderer: THREE.WebGLRenderer
+    try {
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+        powerPreference: "high-performance",
+      })
+    } catch {
+      setHasWebGL(false)
+      return
+    }
+
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
     renderer.setPixelRatio(dpr)
+    renderer.domElement.className =
+      "h-full w-full rounded-[inherit] transition-opacity duration-700 pointer-events-none"
+    container.appendChild(renderer.domElement)
 
     const scene = new THREE.Scene()
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
@@ -400,6 +416,7 @@ export function FluidPortrait({
 
     // GSAP Drain Timeline triggered at ~35% viewport threshold
     let sequenceTriggered = false
+    let activeTl: gsap.core.Timeline | null = null
     const drainTrigger = ScrollTrigger.create({
       trigger: container,
       start: "top 65%",
@@ -409,9 +426,10 @@ export function FluidPortrait({
         sequenceTriggered = true
         setIsDraining(true)
 
-        const tl = gsap.timeline({
+        activeTl = gsap.timeline({
           delay: FLUID_CONFIG.holdDelay,
         })
+        const tl = activeTl
 
         // 1. Drain fluid from 1.0 down to -0.05
         tl.to(
@@ -493,6 +511,9 @@ export function FluidPortrait({
         // Mark as fully drained and completed
         tl.add(() => {
           setIsDrained(true)
+          if (renderer.domElement) {
+            renderer.domElement.style.opacity = "0"
+          }
         }, "+=0.4")
       },
     })
@@ -582,7 +603,13 @@ export function FluidPortrait({
       observer.disconnect()
       scrollTrigger.kill()
       drainTrigger.kill()
+      if (activeTl) {
+        activeTl.kill()
+      }
 
+      if (renderer.domElement.parentNode) {
+        renderer.domElement.parentNode.removeChild(renderer.domElement)
+      }
       renderer.dispose()
       geometry.dispose()
       material.dispose()
@@ -620,19 +647,14 @@ export function FluidPortrait({
 
   return (
     <>
+      {/* Three.js Fluid WebGL Container */}
       <div
         ref={containerRef}
-        className={`pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-[inherit] ${className}`}
+        className={`pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-[inherit] transition-opacity duration-700 ${
+          isDrained ? "opacity-0" : "opacity-100"
+        } ${className}`}
         aria-hidden
-      >
-        {/* Three.js Fluid WebGL Canvas */}
-        <canvas
-          ref={canvasRef}
-          className={`h-full w-full rounded-[inherit] transition-opacity duration-700 ${
-            isDrained ? "opacity-0" : "opacity-100"
-          }`}
-        />
-      </div>
+      />
 
       {/* Overflow Spill Stream Canvas (escapes clipped container boundary to trail gracefully past bottom lip) */}
       {isMounted && cardRef?.current
