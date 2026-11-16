@@ -1,5 +1,6 @@
 "use client"
 
+import { useRef } from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { SectionHeading } from "./section-heading"
@@ -7,13 +8,13 @@ import { stats, timeline } from "@/lib/portfolio-data"
 import { useGithubStats } from "@/lib/hooks/use-github-stats"
 import { Linkedin, Github, ArrowUpRight } from "lucide-react"
 import { details, lines } from "@/lib/portfolio-data"
+import { FluidPortrait } from "./fluid-portrait"
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
-
-
 export function About() {
   const githubStats = useGithubStats("dariogeorge21")
+  const portraitCardRef = useRef<HTMLDivElement>(null)
 
   return (
     <section
@@ -50,7 +51,7 @@ export function About() {
             transition={{ duration: 1, ease: EASE }}
             className="md:col-span-5"
           >
-            <div className="relative">
+            <div ref={portraitCardRef} className="relative [perspective:1000px]">
               <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-border-strong/40 bg-surface">
                 <Image
                   src={details.imageLink || "/darioImg.png"}
@@ -60,17 +61,22 @@ export function About() {
                   className="object-cover"
                   priority={false}
                 />
+                {/* Liquid Glass Fluid Drain WebGL Reveal */}
+                <FluidPortrait
+                  imageSrc={details.imageLink || "/darioImg.png"}
+                  cardRef={portraitCardRef}
+                />
                 {/* Subtle neon frame on hover */}
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/5"
+                  className="pointer-events-none absolute inset-0 z-20 ring-1 ring-inset ring-white/5"
                 />
                 <div
                   aria-hidden
-                  className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/80 to-transparent"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-1/3 bg-gradient-to-t from-background/80 to-transparent"
                 />
                 {/* Signature overlay */}
-                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-5">
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-end justify-between p-5">
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
                       Portrait
